@@ -1,32 +1,29 @@
-# Firebase
-.firebase/
+# Firebase Files
 firebase-debug.log
 firebase-debug.*.log
 .firebaserc
 backend/functions/src/config/firebase.ts
 
-# Dependencies
-node_modules/
+# Dependencies Files
 package-lock.json
 
-# TypeScript
-backend/functions/lib/
+# TypeScript Files
 *.tsbuildinfo
+*.js.map
+*.d.ts
 
-# Environment
+# Environment Files
 .env
 .env.local
 .env.*.local
 
-# IDE - VSCode
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
+# IDE Files
+.vscode/settings.json
+.vscode/tasks.json
+.vscode/launch.json
+.vscode/extensions.json
 
-# Logs
-logs
+# Log Files
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -35,7 +32,3 @@ yarn-error.log*
 # System Files
 .DS_Store
 Thumbs.db
-
-# Build output
-dist/
-build/
