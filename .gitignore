@@ -1,9 +1,3 @@
-# Firebase Files
-firebase-debug.log
-firebase-debug.*.log
-.firebaserc
-backend/functions/src/config/firebase.ts
-
 # Dependencies Files
 package-lock.json
 
