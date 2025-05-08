@@ -1,14 +1,16 @@
 # Projeto-P.I
 
-Bem-vindo ao **Projeto-P.I**! Este é um projeto que utiliza **Firebase** e **TypeScript** para o backend e está estruturado para facilitar o desenvolvimento e a escalabilidade.
+Bem-vindo ao **Projeto-P.I**! Este é um projeto  desenvolvido com **TypeScript**, **Node.js** e **Express**, estruturado para facilitar o desenvolvimento e a escalabilidade.
 
 ---
 
 ## 🚀 Tecnologias Utilizadas
 
-- **Firebase** (Cloud Functions, Firebase Admin SDK)
-- **TypeScript**
 - **Node.js**
+- **TypeScript**
+- **Express**
+- **CORS**
+- **Helmet**
 
 ---
 
@@ -17,18 +19,17 @@ Bem-vindo ao **Projeto-P.I**! Este é um projeto que utiliza **Firebase** e **Ty
 ```plaintext
 Projeto-P.I/
 ├── backend/
-│   ├── functions/
-│   │   ├── package.json       # Dependências do backend
-│   │   ├── tsconfig.json      # Configuração do TypeScript
-│   │   └── src/
-│   │       ├── config/        # Configurações (Firebase, etc.)
-│   │       ├── controllers/   # Lógica das funções do backend
-│   │       ├── middlewares/   # Validações e lógica intermediária
-│   │       ├── models/        # Tipos e interfaces
-│   │       ├── services/      # Regras de negócio
-│   │       └── utils/         # Funções auxiliares
-├── frontend/                  # Frontend (React, Next.js, etc.)
-└── [README.md](http://_vscodecontentref_/1)                  # Documentação do projeto
+│   └── functions/
+│       ├── src/
+│       │   ├── config/        # Configurações do servidor
+│       │   ├── controllers/   # Controladores da API
+│       │   ├── middlewares/   # Middlewares
+│       │   ├── models/        # Tipos e interfaces
+│       │   ├── services/      # Lógica de negócio
+│       │   └── utils/         # Funções auxiliares
+│       ├── package.json
+│       └── tsconfig.json
+└── frontend/                  # (Em desenvolvimento)
 ```
 
 ---
@@ -46,12 +47,13 @@ git clone https://github.com/seu-usuario/projeto-pi.git
 cd projeto-pi
 ```
 
-### 2. Instale o Firebase CLI
+### 2. Configure o Backend
 
-Certifique-se de que o Firebase CLI está instalado globalmente. Caso não esteja, instale com:
+Navegue até o diretoório do backend e instale as dependências:
 
 ```bash
-npm install -g firebase-tools
+cd backend/functions
+npm install
 ```
 
 > **Nota:** Se encontrar problemas de permissão e estiver usando linux, use `sudo`:
@@ -59,104 +61,83 @@ npm install -g firebase-tools
 > sudo npm install -g firebase-tools
 > ```
 
-### 3. Faça Login no Firebase
+### 3. Scripts Disponíveis
 
-Autentique-se no Firebase com o comando:
-
-```bash
-firebase login
-```
-
-### 4. Configure o Backend
-
-Navegue até o diretório `backend/functions` e instale as dependências:
+No diretório functions, você pode executar
 
 ```bash
-cd backend/functions
-npm install
+# Inicia o servidor em modo desenvolvimento
+npm run dev
+
+# Compila o TypeScript
+npm run build
+
+# Inicia o servidor em modo produção
+npm start
+
+# Compila em modo watch
+npm run watch
 ```
 
-### 5. Inicialize o Firebase (se necessário)
-
-Se o Firebase ainda não estiver configurado no projeto, inicialize-o:
-
+### 4. Configuração Ambiente
+Crie um .env no diretório functions
 ```bash
-firebase init
+PORT=3000
+NODE_ENV=development
 ```
-
-Durante a inicialização:
-- Escolha **Functions** para configurar as Cloud Functions.
-- Selecione o diretório `backend/functions` como o local das funções.
-- Escolha **TypeScript** como a linguagem.
-
-### 6. Compile o TypeScript
-
-Compile o código TypeScript para JavaScript:
-
-```bash
-npx tsc
-```
-
-### 7. Execute Localmente
-
-Para testar as funções localmente, use o comando:
-
-```bash
-firebase emulators:start
-```
-
-### 8. Implante no Firebase
-
-Quando estiver pronto para implantar as funções no Firebase, execute:
-
-```bash
-firebase deploy --only functions
-```
-
----
-
-### Configuração do Firebase para Equipe
-
-Para desenvolver no projeto compartilhado, cada desenvolvedor precisará:
-
-1. **Solicitar Acesso ao Projeto**
-   - O administrador do projeto deve adicionar cada desenvolvedor como membro no [Firebase Console](https://console.firebase.google.com):
-     1. Acesse "Project Settings" (ícone de engrenagem)
-     2. Aba "Users and permissions"
-     3. Clique em "Add member"
-     4. Adicione o email do desenvolvedor com a função adequada (Editor ou Viewer)
-
-2. **Configurar Ambiente Local**
-   ```bash
-   # Instalar Firebase CLI globalmente
-   sudo npm install -g firebase-tools
-   
-   # Fazer login no Firebase (usar conta que foi adicionada ao projeto)
-   firebase login
-   
-   # Selecionar o projeto
-   firebase use seu-projeto-id
-   ```
 
 ---
 
 ## 💡 Dicas para Desenvolvimento
 
-- Certifique-se de que o arquivo `firebase.ts` em `src/config` está configurado corretamente com as credenciais do Firebase.
-- Use o comando `npx tsc --watch` para compilar o TypeScript automaticamente enquanto desenvolve.
+1. **Hot-Reload**
+   - O modo desenvolvimento (`npm run dev`) possui hot-reload
+   - As alterações são detectadas automaticamente
+   - O servidor reinicia automaticamente após mudanças
+
+2. **TypeScript**
+   - Use tipos explícitos sempre que possível
+   - Aproveite o intellisense do VSCode
+   - Mantenha o `tsconfig.json` atualizado
+
+3. **Estrutura de Arquivos**
+   - Mantenha cada funcionalidade em seu diretório apropriado
+   - Siga os padrões de nomenclatura estabelecidos
+   - Use index.ts para exportações
+
+---
+
+## 🔒 Segurança e Boas Práticas
+
+1. **Middlewares de Segurança**
+   - **Helmet**: Proteção de cabeçalhos HTTP
+   - **CORS**: Configurado para origens específicas
+   - **Express.json**: Limite de tamanho para requisições
+
+2. **Código**
+   - Mantenha o código documentado
+   - Use interfaces para tipos complexos
+   - Implemente tratamento de erros
 
 ---
 
 ## 🤝 Contribuição
 
-Sinta-se à vontade para contribuir com o projeto! Basta abrir uma **issue** ou enviar um **pull request**.
+1. Faça um Fork do projeto
+2. Crie sua Branch (`git checkout -b feature/MinhaFeature`)
+3. Commit suas alterações (`git commit -m 'feat: adiciona MinhaFeature'`)
+4. Push para a Branch (`git push origin feature/MinhaFeature`)
+5. Abra um Pull Request
 
 ---
 
-## 📄 Licença
+## 📚 Recursos Adicionais
 
-Será adicionado em breve
+- [TypeScript Documentation](https://www.typescriptlang.org/docs/)
+- [Express.js Guide](https://expressjs.com/en/guide/routing.html)
+- [Node.js Best Practices](https://github.com/goldbergyoni/nodebestpractices)
 
 ---
+
 
 
