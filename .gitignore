@@ -1,28 +1,38 @@
-# Dependencies Files
+# Dependencies
+node_modules/
 package-lock.json
 
-# TypeScript Files
+# Build
+dist/
+build/
 *.tsbuildinfo
+
+# TypeScript
 *.js.map
 *.d.ts
 
-# Environment Files
+# Environment
 .env
 .env.local
 .env.*.local
+*.local
 
-# IDE Files
-.vscode/settings.json
-.vscode/tasks.json
-.vscode/launch.json
-.vscode/extensions.json
+# IDE
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
 
-# Log Files
+# Logs
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# System Files
+# System
 .DS_Store
 Thumbs.db
+
+# Keep empty directories
+!.gitkeep
