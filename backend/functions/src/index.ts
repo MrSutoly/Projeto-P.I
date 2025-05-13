@@ -1,13 +1,11 @@
 import { app } from "./config/server";
-
-// ISSO É SO UM EXEMPLO
+import { Router, Request, Response } from 'express';
+import  LoggerService  from './routes/logger_route';
 
 const PORT = process.env.PORT || 3000;
 
-app.get("/", (req, res) => {
-  res.json({ message: "API is running" });
-});
+app.get('/api/logs', LoggerService);
 
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`ta rodando nessa porta aqui papai${PORT}`);
 });
