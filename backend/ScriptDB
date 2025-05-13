@@ -1,0 +1,95 @@
+-- Usuários (alunos, professores)
+CREATE TABLE usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    tipo ENUM('aluno', 'professor') NOT NULL,
+    login VARCHAR(100) UNIQUE
+);
+
+-- Turmas
+CREATE TABLE turmas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL
+    
+);
+
+-- Relacionamento entre usuário e turma (1:N)
+ALTER TABLE usuarios
+ADD COLUMN turma_id INT,
+ADD FOREIGN KEY (turma_id) REFERENCES turmas(id) ON DELETE SET NULL;
+
+-- Mascotes
+CREATE TABLE mascotes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(50) NOT NULL,
+    imagem_url TEXT
+);
+
+-- Atividades
+CREATE TABLE atividades (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    titulo VARCHAR(100) NOT NULL,
+    descricao TEXT,
+    link_constante TEXT,
+    mascote_id INT,
+    FOREIGN KEY (mascote_id) REFERENCES mascotes(id)
+);
+
+-- Semanas
+CREATE TABLE semanas (
+    numero INT PRIMARY KEY,
+    data_inicio DATE NOT NULL,
+    data_fim DATE NOT NULL
+);
+
+-- Relacionamento entre atividade e semana
+ALTER TABLE atividades
+ADD COLUMN semana_numero INT,
+ADD FOREIGN KEY (semana_numero) REFERENCES semanas(numero);
+
+-- Quiz (Perguntas da atividade)
+CREATE TABLE quizzes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    pergunta TEXT NOT NULL,
+    tipo ENUM('kahoot', 'clicar_objeto') NOT NULL,
+    atividade_id INT,
+    FOREIGN KEY (atividade_id) REFERENCES atividades(id) ON DELETE CASCADE
+);
+
+-- Respostas dos alunos
+CREATE TABLE respostas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    resposta TEXT,
+    correta BOOLEAN,
+    usuario_id INT,
+    quiz_id INT,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+    FOREIGN KEY (quiz_id) REFERENCES quizzes(id) ON DELETE CASCADE
+);
+
+-- Pontuação (baseada em completude)
+CREATE TABLE pontuacoes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    pontos INT NOT NULL,
+    completude BOOLEAN DEFAULT TRUE,
+    turma_id INT,
+    resposta_id INT,
+    FOREIGN KEY (turma_id) REFERENCES turmas(id),
+    FOREIGN KEY (resposta_id) REFERENCES respostas(id) ON DELETE CASCADE
+);
+
+-- Reciclagem por turma
+CREATE TABLE reciclagem (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    quantidade INT NOT NULL,
+    turma_id INT,
+    FOREIGN KEY (turma_id) REFERENCES turmas(id)
+);
+
+-- Link fixo para atividade semanal por turma
+CREATE TABLE links_atividade (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    url TEXT NOT NULL,
+    turma_id INT,
+    FOREIGN KEY (turma_id) REFERENCES turmas(id)
+);
