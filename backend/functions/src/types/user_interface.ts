@@ -1,9 +1,10 @@
-export type UserRole = 'admin' | 'teacher' | 'student';
+type UserRole = 'admin' | 'teacher' | 'student';
 
-export interface User{
-    id: number,
-    name: string,
+ type User ={
+    id?: number,
+    nome: string,
     email: string,
     password: string,
     role: UserRole,
+    turma_id?: number;
 }

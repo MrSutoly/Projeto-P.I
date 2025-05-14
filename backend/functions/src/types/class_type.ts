@@ -1,5 +1,4 @@
 type Class = {
-    id: number,
-    name: string,
-    teacherId: number,
+    id?: number,
+    nome: string,
 }
