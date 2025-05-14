@@ -1,10 +1,9 @@
-type UserRole = 'admin' | 'teacher' | 'student';
+export type UserRole = 'admin' | 'professor' | 'aluno';
 
- type User ={
+ export type User = { 
     id?: number,
     nome: string,
     email: string,
     password: string,
     role: UserRole,
-    turma_id?: number;
 }
