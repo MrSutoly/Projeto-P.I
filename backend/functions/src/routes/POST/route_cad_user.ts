@@ -19,6 +19,7 @@ router.post('/cad_user', async (req: Request, res: Response)=>{
             email,
             role
         };
+        
         res.status(201).json({
             message: 'Usuário cadastrado com sucesso.',
             user: newUser
