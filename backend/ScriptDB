@@ -11,13 +11,13 @@ CREATE TABLE usuarios (
 CREATE TABLE turmas (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL
-    
+    codigo VARCHAR(6) NOT NULL UNIQUE,
 );
 
 -- Relacionamento entre usuário e turma (1:N)
 ALTER TABLE usuarios
-ADD COLUMN turma_id INT,
-ADD FOREIGN KEY (turma_id) REFERENCES turmas(id) ON DELETE SET NULL;
+ADD COLUMN class_id INT,
+ADD FOREIGN KEY (class_id) REFERENCES turmas(id) ON DELETE SET NULL;
 
 -- Atividades
 CREATE TABLE atividades (
@@ -65,9 +65,9 @@ CREATE TABLE pontuacoes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     pontos INT NOT NULL,
     completude BOOLEAN DEFAULT TRUE,
-    turma_id INT,
+    class_id INT,
     resposta_id INT,
-    FOREIGN KEY (turma_id) REFERENCES turmas(id),
+    FOREIGN KEY (class_id) REFERENCES turmas(id),
     FOREIGN KEY (resposta_id) REFERENCES respostas(id) ON DELETE CASCADE
 );
 
@@ -75,14 +75,14 @@ CREATE TABLE pontuacoes (
 CREATE TABLE reciclagem (
     id INT AUTO_INCREMENT PRIMARY KEY,
     quantidade INT NOT NULL,
-    turma_id INT,
-    FOREIGN KEY (turma_id) REFERENCES turmas(id)
+    class_id INT,
+    FOREIGN KEY (class_id) REFERENCES turmas(id)
 );
 
 -- Link fixo para atividade semanal por turma
 CREATE TABLE links_atividade (
     id INT AUTO_INCREMENT PRIMARY KEY,
     url TEXT NOT NULL,
-    turma_id INT,
-    FOREIGN KEY (turma_id) REFERENCES turmas(id)
+    class_id INT,
+    FOREIGN KEY (class_id) REFERENCES turmas(id)
 );

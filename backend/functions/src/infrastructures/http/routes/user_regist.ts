@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
-import { executeQuery } from '../../data/db';
-import { User } from '../../types/user_type';
+import { executeQuery } from '../../databases/mysql/db';
+import { User } from '../../../domains/entities/user_type';
 
 const router = Router();
 

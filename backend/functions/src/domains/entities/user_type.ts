@@ -6,4 +6,5 @@ export type UserRole = 'admin' | 'professor' | 'aluno';
     email: string,
     password: string,
     role: UserRole,
+    turma_id?: number, 
 }

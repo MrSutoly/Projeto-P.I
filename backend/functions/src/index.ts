@@ -1,7 +1,7 @@
-import  { app }  from "./config/server";
-import  get  from "./routes/GET/route_get";
-import  getById  from "./routes/GET/route_get_by_id";
-import  cadUser  from "./routes/POST/route_cad_user";
+import  { app }  from "./infrastructures/configs/server";
+import  get  from "./infrastructures/http/routes/user_get";
+import  getById  from "./infrastructures/http/routes/user_get_by_id";
+import  cadUser  from "./infrastructures/http/routes/user_regist";
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
