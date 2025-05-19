@@ -1,5 +1,9 @@
--- Usuários (alunos, professores)
-CREATE TABLE usuarios (
+-- Criar banco e usar
+CREATE DATABASE IF NOT EXISTS ProjectPI;
+USE ProjectPI;
+
+-- Usuários
+CREATE TABLE IF NOT EXISTS usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
@@ -8,40 +12,47 @@ CREATE TABLE usuarios (
 );
 
 -- Turmas
-CREATE TABLE turmas (
+CREATE TABLE IF NOT EXISTS turmas (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(100) NOT NULL
-    codigo VARCHAR(6) NOT NULL UNIQUE,
+    nome VARCHAR(100) NOT NULL,
+    codigo VARCHAR(6) NOT NULL UNIQUE
 );
 
--- Relacionamento entre usuário e turma (1:N)
+-- Relacionamento 1:N (turmas para usuários)
 ALTER TABLE usuarios
 ADD COLUMN class_id INT,
 ADD FOREIGN KEY (class_id) REFERENCES turmas(id) ON DELETE SET NULL;
 
+-- Mascotes (adicionada porque estava referenciada)
+CREATE TABLE IF NOT EXISTS mascotes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL
+);
+
 -- Atividades
-CREATE TABLE atividades (
+CREATE TABLE IF NOT EXISTS atividades (
     id INT AUTO_INCREMENT PRIMARY KEY,
     titulo VARCHAR(100) NOT NULL,
     descricao TEXT,
     link_constante TEXT,
+    mascote_id INT,
     FOREIGN KEY (mascote_id) REFERENCES mascotes(id)
 );
 
 -- Semanas
-CREATE TABLE semanas (
+CREATE TABLE IF NOT EXISTS semanas (
     numero INT PRIMARY KEY,
     data_inicio DATE NOT NULL,
     data_fim DATE NOT NULL
 );
 
--- Relacionamento entre atividade e semana
+-- Relacionamento atividade/semana
 ALTER TABLE atividades
 ADD COLUMN semana_numero INT,
 ADD FOREIGN KEY (semana_numero) REFERENCES semanas(numero);
 
--- Quiz (Perguntas da atividade)
-CREATE TABLE quizzes (
+-- Quizzes
+CREATE TABLE IF NOT EXISTS quizzes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     pergunta TEXT NOT NULL,
     tipo ENUM('kahoot', 'clicar_objeto') NOT NULL,
@@ -49,8 +60,8 @@ CREATE TABLE quizzes (
     FOREIGN KEY (atividade_id) REFERENCES atividades(id) ON DELETE CASCADE
 );
 
--- Respostas dos alunos
-CREATE TABLE respostas (
+-- Respostas
+CREATE TABLE IF NOT EXISTS respostas (
     id INT AUTO_INCREMENT PRIMARY KEY,
     resposta TEXT,
     correta BOOLEAN,
@@ -60,8 +71,8 @@ CREATE TABLE respostas (
     FOREIGN KEY (quiz_id) REFERENCES quizzes(id) ON DELETE CASCADE
 );
 
--- Pontuação (baseada em completude)
-CREATE TABLE pontuacoes (
+-- Pontuações
+CREATE TABLE IF NOT EXISTS pontuacoes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     pontos INT NOT NULL,
     completude BOOLEAN DEFAULT TRUE,
@@ -71,16 +82,16 @@ CREATE TABLE pontuacoes (
     FOREIGN KEY (resposta_id) REFERENCES respostas(id) ON DELETE CASCADE
 );
 
--- Reciclagem por turma
-CREATE TABLE reciclagem (
+-- Reciclagem
+CREATE TABLE IF NOT EXISTS reciclagem (
     id INT AUTO_INCREMENT PRIMARY KEY,
     quantidade INT NOT NULL,
     class_id INT,
     FOREIGN KEY (class_id) REFERENCES turmas(id)
 );
 
--- Link fixo para atividade semanal por turma
-CREATE TABLE links_atividade (
+-- Links para atividades
+CREATE TABLE IF NOT EXISTS links_atividade (
     id INT AUTO_INCREMENT PRIMARY KEY,
     url TEXT NOT NULL,
     class_id INT,
