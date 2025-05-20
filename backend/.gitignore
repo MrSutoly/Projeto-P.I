@@ -3,6 +3,11 @@
 /.pnp
 .pnp.js
 
+# Specific folders to ignore
+/src/domains/
+/src/infrastructures/
+/src/applications/
+
 # Production build
 /dist
 /build

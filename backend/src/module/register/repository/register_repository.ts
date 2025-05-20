@@ -15,15 +15,15 @@ export class RegisterRepository implements IRegisterRepository {
     }
 
     async createUser(user: UserRegi): Promise<UserRegi> {
-        const hashedPass = await bcrypt.hash(user.password, 10);
+        const hashedPass = await bcrypt.hash(user.password, 6);
 
-        const result = await executeQuery<UserRegi[]>(
+        const result = await executeQuery<any>(
             'INSERT INTO usuarios (nome, email, password, role) VALUES (?, ?, ?, ?)',
             [user.nome, user.email, hashedPass, user.role]
         );
 
         return{
-            id: user.id!,
+            id: result.insertId!,
             nome: user.nome,
             email: user.email,
             password: hashedPass,

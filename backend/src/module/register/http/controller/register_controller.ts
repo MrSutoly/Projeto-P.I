@@ -13,6 +13,12 @@ export class RegisterController{
         try{
             const { nome, email, password, role } = req.body;
 
+            if (!nome || !email || !password || !role) {
+                return res.status(400).json({ 
+                    message: 'Todos os campos são obrigatórios' 
+                });
+            }
+
             const result = await this.registerUseCase.execute({ nome, email, password, role });
 
             return res.status(201).json(result);
