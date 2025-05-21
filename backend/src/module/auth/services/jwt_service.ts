@@ -4,9 +4,14 @@ import { JWTPayload } from '../types/jwt_payload';
 import { User } from '../../login/entitie/user_type';
 
 export class JWTService {
-    private secretKey = process.env.JWT_SECRET || 'default_secret_key';
+    private secretKey = process.env.JWT_SECRET || 'df_key';
 
     generateToken(user: Omit<User, 'password'>): string {
+
+        if (!user.id) {
+            throw new Error('User ID is required');
+        };
+
         const payload: JWTPayload = {
             id: user.id!,
             email: user.email,
