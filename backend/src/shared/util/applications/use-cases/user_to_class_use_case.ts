@@ -1,3 +1,4 @@
+/*
 import { IUserRepository } from "../../domains/repositorys/i_user_repository";
 
     export class UserToClassUseCase {
@@ -12,3 +13,4 @@ import { IUserRepository } from "../../domains/repositorys/i_user_repository";
             return await this.userRepository.UserToClass(userId, classId);
     }
 }
+    */

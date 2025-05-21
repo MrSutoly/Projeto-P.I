@@ -1,7 +1,8 @@
+/*
 import { executeQuery } from '../../shared/database/mysql/db';
 import { IUserRepository } from '../../domains/repositorys/i_user_repository';
-import { User } from '../../domains/entities/user_type';
-import { Class } from '../../domains/entities/class_type';
+import { User } from '../../shared/util/entities/user_type';
+import { Class } from '../../shared/util/entities/class_type';
 
 export class UserRepository implements IUserRepository {
     async GetAll(): Promise<User[]> {
@@ -39,3 +40,4 @@ export class UserRepository implements IUserRepository {
         );
     }
 }
+    */

@@ -1,4 +1,5 @@
-import { User } from '../entities/user_type';
+/*
+import { User } from '../../shared/util/entities/user_type';
 
     export interface IUserRepository{
         GetAll():Promise<User[]>;
@@ -6,3 +7,4 @@ import { User } from '../entities/user_type';
         CreateUser(user: User): Promise<User>;
         UserToClass(userId: number, classId: number): Promise<void>;
     }
+        */

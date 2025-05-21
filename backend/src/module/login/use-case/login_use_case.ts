@@ -1,11 +1,13 @@
 import { injectable, inject } from 'tsyringe';
 import { ILoginRepository } from "../repository/i_login_repository";
+import { JWTService } from '../../auth/services/jwt_service';
 
 @injectable()
 export class LoginUseCase {
     constructor(
         @inject('LoginRepository')
-        private loginRepository: ILoginRepository
+        private loginRepository: ILoginRepository,
+        private jwtService: JWTService
     ) {}
 
     async execute({ email, password }: { email: string; password: string }) {
@@ -21,11 +23,21 @@ export class LoginUseCase {
             throw new Error('Senha inválida');
         }
 
-        return {
+        const token = this.jwtService.generateToken({
             id: user.id!,
             nome: user.nome,
             email: user.email,
             role: user.role,
+        });
+
+        return {
+            user: { 
+            id: user.id!,
+            nome: user.nome,
+            email: user.email,
+            role: user.role,
+            },
+            token
         };
     }
 }
