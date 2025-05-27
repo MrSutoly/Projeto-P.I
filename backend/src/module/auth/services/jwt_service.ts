@@ -1,7 +1,7 @@
 import { injectable } from 'tsyringe';
 import jwt from 'jsonwebtoken';
 import { JWTPayload } from '../types/jwt_payload';
-import { User } from '../../login/entitie/user_type';
+import { User } from '../../../shared/util/entities/user_type';
 
 export class JWTService {
     private secretKey = process.env.JWT_SECRET || 'df_key';

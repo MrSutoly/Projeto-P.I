@@ -1,4 +1,4 @@
-import { User } from '../entitie/user_type';
+import { User } from '../../../shared/util/entities/user_type';
 
 
 export interface ILoginRepository{

@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { container } from 'tsyringe';
 import { JWTService } from '../services/jwt_service';
 
-export const ensureAuthenticated = async (req: Request, res: Response, next: NextFunction): Promise<Responde | void> => {
+export const ensureAuthenticated = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
     const authHeader = req.headers.authorization;
 
     if (!authHeader) {
@@ -10,13 +10,15 @@ export const ensureAuthenticated = async (req: Request, res: Response, next: Nex
     }
 
     const token = authHeader.split(' ')[1];
-
-    const jwtService = container.resolve(JWTService);
-
+    
     try {
         const jwtService = container.resolve(JWTService);
 
         const decoded = await jwtService.verifyToken(token);
+
+        if (!decoded || !decoded.id) {
+            return res.status(401).json({ message: 'Token inválido.' });
+        }
 
         req.user = { id: decoded.id };
 

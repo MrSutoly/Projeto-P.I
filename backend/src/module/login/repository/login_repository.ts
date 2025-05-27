@@ -1,6 +1,6 @@
 import { injectable } from 'tsyringe';
 import { executeQuery } from "../../../shared/database/mysql/db";
-import { User } from "../entitie/user_type";
+import { User } from '../../../shared/util/entities/user_type';
 import { ILoginRepository } from "./i_login_repository";
 import bcrypt from 'bcrypt';
 
