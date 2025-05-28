@@ -8,6 +8,7 @@
 /build
 /lib
 
+
 # Environment variables
 .env
 .env.local
@@ -73,3 +74,8 @@ Thumbs.db
 
 # Debug files
 debug.log
+
+# Frontend folder and its contents
+../frontend/
+../frontend/*
+../frontend/**/*

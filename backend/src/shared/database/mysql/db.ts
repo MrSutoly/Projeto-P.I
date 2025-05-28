@@ -7,7 +7,7 @@ dotenv.config();
 const pool = mysql.createPool({
     host: 'localhost',
     user: 'root',
-    password: 'batata',
+    password: '9297',
     database: 'ProjectPI',
     port: 3306,
     waitForConnections: true,

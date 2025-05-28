@@ -10,7 +10,19 @@ export class ManagementController {
 
     async handleCreateClass(req: Request, res: Response): Promise<Response> {
         try {
-            const classData = req.body;
+            const {nome, codigo} = req.body;
+
+            if(!nome || !codigo) {
+                return res.status(400).json({
+                    message: 'Nome e código da turma são obrigatórios'
+                })
+            }
+            
+            const classData = {
+                nome,
+                codigo
+            }
+
             const newClass = await this.managementUseCase.createClass(classData);
             return res.status(201).json(newClass);
         } catch (err: any) {

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Seção de Login -->
+        <div id="loginSection">
+            <h2>Login</h2>
+            <form id="loginForm">
+                <input type="email" id="email" placeholder="Email" required>
+                <input type="password" id="password" placeholder="Senha" required>
+                <button type="submit">Entrar</button>
+            </form>
+        </div>
+
+        <!-- Seção de Quizzes (inicialmente escondida) -->
+        <div id="quizSection" class="hidden">
+            <h2>Quizzes Disponíveis</h2>
+            <div id="quizList"></div>
+
+            <!-- Área do Quiz Atual (inicialmente escondida) -->
+            <div id="activeQuiz" class="hidden">
+                <h3 id="quizTitle"></h3>
+                <p id="questionText"></p>
+                <div id="options"></div>
+                <button id="submitAnswer" onclick="submitQuiz()">Enviar Resposta</button>
+                <button id="backToList" onclick="showQuizList()">Voltar para Lista</button>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
