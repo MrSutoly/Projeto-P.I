@@ -1,6 +1,6 @@
 import { injectable, inject } from 'tsyringe';
 import { IQuizRepository } from '../repository/i_quiz_repository';
-import { Quiz, Question, Option } from '../../../shared/entitie/quiz_type';
+import { Quiz} from '../../../shared/entitie/quiz_type';
 
 @injectable()
 export class CreateQuizUseCase {
@@ -32,7 +32,7 @@ export class CreateQuizUseCase {
         const quiz = await this.quizRepository.createQuiz({
             titulo: data.titulo,
             tipo: data.tipo,
-            atividade_id: data.atividade_id || null
+            atividade_id: data.atividade_id || undefined
         });
 
 

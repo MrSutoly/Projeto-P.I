@@ -10,9 +10,6 @@ import loginRouter from "./module/login/http/routes/login_route";
 import registerRouter from "./module/register/http/routes/register_route";
 import managementRouter from './module/management/http/routes/management_route';
 import quizRouter from './module/quizmanagement/http/routes/quiz_route'
-import cors from 'cors';
-
-
 
 const PORT = process.env.PORT || 3000;
 
