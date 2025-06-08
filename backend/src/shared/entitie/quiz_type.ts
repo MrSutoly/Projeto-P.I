@@ -21,3 +21,19 @@ export type Quiz = {
     atividade_id?: number;
     perguntas?: Question[];
 }
+
+export type QuizResponse = {
+    id?: number;
+    usuario_id: number;  
+    quiz_id: number;
+    pergunta_id: number;
+    opcao_id: number;
+    timestamp?: Date;
+}
+
+export type QuizResult = {
+    total_perguntas: number;      
+    respostas_corretas: number;   
+    pontuacao: number;
+    completude: boolean;
+}

@@ -11,7 +11,9 @@ export class ManagementController {
     async handleUpdateClass(req: Request, res: Response): Promise<Response> {
         try {
             const { id } = req.params;
+            
             const { nome, codigo } = req.body;
+
             if (!nome || !codigo) {
                 return res.status(400).json({
                     message: 'Nome e código da turma são obrigatórios'

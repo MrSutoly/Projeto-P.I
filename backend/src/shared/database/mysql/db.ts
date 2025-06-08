@@ -1,28 +1,52 @@
 import mysql from 'mysql2/promise';
-import dotenv from 'dotenv';
-
-
-dotenv.config();
+import { AppError } from '../../errors/AppError';
 
 const pool = mysql.createPool({
-    host: 'localhost',
-    user: 'root',
-    password: '9297',
-    database: 'ProjectPI',
-    port: 3306,
+    host: process.env.DB_HOST || 'localhost',
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || '',
+    database: process.env.DB_NAME || 'quiz_db',
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
-  });
-  
-  export const executeQuery = async <T>(query: string, params?: any[]): Promise<T> => {
+});
+
+export async function executeQuery<T>(query: string, params?: any[]): Promise<T> {
     try {
-      const [rows] = await pool.execute(query, params);
-      return rows as T;
-    } catch (error) {
-      console.error('Erro no banco:', error);
-      throw error;
+        const [result] = await pool.execute(query, params);
+        return result as T;
+    } catch (error: any) {
+        console.error('Database error:', error);
+        throw new AppError(
+            'Erro ao executar operação no banco de dados',
+            500
+        );
     }
-  };
-  
-  export default pool;
+}
+
+export async function executeTransaction<T>(
+    queries: { query: string; params?: any[] }[]
+): Promise<T> {
+    const connection = await pool.getConnection();
+    try {
+        await connection.beginTransaction();
+
+        for (const { query, params } of queries) {
+            await connection.execute(query, params);
+        }
+
+        await connection.commit();
+        return {} as T;
+    } catch (error: any) {
+        await connection.rollback();
+        console.error('Transaction error:', error);
+        throw new AppError(
+            'Erro ao executar transação no banco de dados',
+            500
+        );
+    } finally {
+        connection.release();
+    }
+}
+
+export default pool;
