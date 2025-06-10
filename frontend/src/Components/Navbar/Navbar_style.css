@@ -1,0 +1,166 @@
+#navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 60px;
+    z-index: 1000;
+    background-color: #03C1A7;
+}
+
+/* Barra superior */
+.navbar-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+}
+
+.navbar-top #titulo-header{
+    color: #fff;
+    font-weight: bold;
+}
+
+/* Sidebar: começa fora da tela à esquerda */
+.navbarLista {
+    position: fixed;
+    top: 0;
+    left: -300px;
+    height: 100vh;
+    width: 200px;
+    background: #03C1A7 ;
+    display: flex;
+    flex-direction: column;
+    transition: left 0.3s ease-in-out;
+    z-index: 1500;
+    list-style: none;
+}  
+
+/* Quando ativo, desliza para dentro */
+#navbar.active .navbarLista {
+    margin: 0;
+    padding-top: 20px;
+    left: 0;
+}
+
+
+/* Estilo dos itens */
+.navbarLista .item {
+    padding: 15px;
+    border-bottom: 1px solid #ccc;
+    text-align: center;
+}
+
+#icone, #nome {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+}
+
+#mobile{
+    position: relative;
+    z-index: 2000;
+}
+
+/* Ícone menu */
+#mobile i {
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/*
+    Overlay
+*/
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(0, 0, 0, 0.5); /* escurece o fundo */
+    z-index: 999; /* abaixo do botão "X" (2000) e acima do conteúdo */
+}
+
+/****************************************************************************************************************/
+@media screen and (min-width: 769px) {
+    /* 
+        Navbar-top 
+    */
+
+    .navbar-top{
+        display: none;
+    }
+
+    #titulo-header {
+        display: none;
+    }
+
+    #mobile {
+        display: none;
+    }
+
+    /*
+        navbar
+    */    
+
+    #navbar {
+        margin: 0;
+        padding: 0;
+        width: 70px; /* barra mais fina */
+        align-items: center;
+    }
+
+    .navbarLista {
+        position: static;
+        flex-direction: column;
+        height: 100vh;
+        width: 100%;
+        left: 0;
+        padding: 0;
+        margin: 0;
+    }
+
+    /*
+        Itens
+    */
+
+    .navbarLista .item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding: 12px 0;
+        box-sizing: border-box;
+        border-bottom: none;
+        margin-bottom: 2px;
+    }
+
+    .navbarLista .item:hover {
+        cursor: pointer;
+        /* background: #FF9A92; */
+        background: rgba(0, 0, 0, 0.7);
+    }
+
+    .navbarLista .item:hover #nome{
+        /* color: #313130; */
+        color: #fff;
+    }
+
+    .navbarLista .item:hover #icone i {
+        /* color: #313130; */
+        color: #fff;
+    }
+
+    #icone i{
+        font-size: 20px;
+    }
+
+    #nome {
+        font-size: .7em;
+        margin-top: 5px;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+}

@@ -1,0 +1,33 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.header {
+  margin-top: 12vh;
+}
+
+
+.Home {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.Main {
+  flex-grow: 1;
+  padding-top: 10px; /* altura da navbar */
+  margin-bottom: 0;
+}
+
+.footer{
+  min-height: auto;
+}
+

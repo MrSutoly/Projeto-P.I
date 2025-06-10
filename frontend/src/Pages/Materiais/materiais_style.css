@@ -1,0 +1,30 @@
+.footer{
+  min-height: auto;
+}
+
+/* 
+  Tela normal = iphone se
+  Tela min 390px = iphone 12 pro
+  Tela min 540px = surface duo
+  Tela min 768px = ipad mini
+  Tela min 912px = Surface pro 7
+  Tela min 1280px = normal
+*/
+
+@media screen and (min-width: 390px) {
+  .footer {
+    margin-top: 140px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .footer {
+    margin-top: 300px;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  .footer {
+    margin-top: 0;
+  }
+}

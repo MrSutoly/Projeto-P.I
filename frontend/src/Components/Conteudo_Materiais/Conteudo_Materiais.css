@@ -1,0 +1,129 @@
+.imagens{
+    display: none;
+}
+
+/*
+    HEADER
+*/
+
+.header {
+    justify-content: center;
+    text-align: center;
+    font-size: 30px;
+    color: #03A791;
+}
+
+/*
+    CONTEUDO
+*/
+
+.conteudo{
+    margin: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    background-color: #D2DEE3;
+}
+
+.conteudo .conteudo-titulo{
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    background-color: #45B9AB;
+    color: #D8E4A9;
+    height: 100%;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+    font-size: 30px;
+}
+
+.conteudo .cont-lista{
+    height: 100%;
+    border-end-start-radius: 20px;
+    border-end-end-radius: 20px;
+}
+
+.conteudo .cont-lista ul {
+    list-style: none;
+    margin: 30px 0;
+    max-width: 270px;
+}
+
+.conteudo .cont-lista ul li{
+    margin: 20px 0; 
+    font-size: 18px;
+    width: 100%;
+}
+
+.conteudo .cont-lista ul a{
+    display: block;
+    margin-top: 10px;
+    font-weight: 300;
+
+}
+
+.conteudo .cont-lista .apostila{
+    margin-top: 50px;  
+}
+
+/*
+    MEDIA QUERY
+*/
+
+/* Telas médias (>= 540px) */
+@media screen and (min-width: 540px) {
+    .conteudo .cont-lista ul {
+        margin: 30px 0;
+        max-width: 420px;
+    }
+}
+
+/* Tablets (>= 768px) */
+@media screen and (min-width: 768px) {
+    .conteudo .cont-lista ul {
+        margin: 30px 0;
+        max-width: 650px;
+    }
+}
+
+/* Tablets grandes / pequenos desktops (>= 912px) */
+@media screen and (min-width: 912px) {
+    .header {
+        margin-left: 6%;
+    }
+
+    .conteudo{
+        margin: 30px 30px 50px 100px;
+        border-radius: 20px;
+    }
+
+    .conteudo .conteudo-titulo{
+        padding: 20px;
+    }
+
+    .conteudo .cont-lista ul {
+        margin: 30px 0;
+        max-width: 700px;
+    }
+
+    .conteudo .cont-lista ul li{
+        margin-bottom: 10px; 
+    }
+
+}
+
+/* Normal */
+@media screen and (min-width: 1280px) {
+    .imagens{
+        display: flex;
+        flex-direction: row;
+        margin-left: 600px;
+    }
+
+    .imagens img{
+        width: 250px;
+        height: 300px;
+    }
+
+}
+
+

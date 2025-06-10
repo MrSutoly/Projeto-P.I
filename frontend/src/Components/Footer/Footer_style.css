@@ -1,0 +1,18 @@
+.footer{
+  margin-top: 0;
+}
+
+.imagem-logo {
+  display: flex;
+  justify-content: center;
+  gap: 1em;
+  padding: 2em 0; /* garante altura interna */
+  background-color: #f0f0f0;
+}
+
+
+.imagem-logo img {
+  width: 80px;
+  height: auto;
+  margin: 1em;
+}

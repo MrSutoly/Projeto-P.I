@@ -1,0 +1,77 @@
+.conteudo{
+    margin: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    background-color: #D2DEE3;
+    margin-bottom: 50px;
+}
+
+.conteudo .conteudo-titulo{
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    background-color: #45B9AB;
+    color: #D8E4A9;
+    height: 100%;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+    font-size: 30px;
+}
+
+.conteudo-section{
+    padding: 20px;
+}
+
+.foto{
+    background-color: #fff;
+    padding: 10px;
+    margin-bottom: 30px;
+}
+
+.foto img{
+    width: 90%;
+}
+
+.foto p{
+    font-size: 20px;
+}
+
+.foto .fa-gear{
+    margin-left: 90%;
+    font-size: 30px;
+}
+
+/* 
+  Tela normal = iphone se
+  Tela min 390px = iphone 12 pro
+  Tela min 540px = surface duo
+  Tela min 768px = ipad mini
+  Tela min 912px = Surface pro 7
+  Tela min 1280px = normal
+*/
+
+@media screen and (min-width: 1280px) {
+    .conteudo{
+        margin-left: 90px;
+        
+    }
+
+    .conteudo-section{
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+    }
+
+    .foto{
+        height: 300px;
+        width: 40%;
+    }
+
+    .foto img{
+        width: 80%;
+        margin-bottom: 30px;
+    }
+
+}
+

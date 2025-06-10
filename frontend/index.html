@@ -1,38 +1,24 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz System</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <div class="container">
-        <!-- Seção de Login -->
-        <div id="loginSection">
-            <h2>Login</h2>
-            <form id="loginForm">
-                <input type="email" id="email" placeholder="Email" required>
-                <input type="password" id="password" placeholder="Senha" required>
-                <button type="submit">Entrar</button>
-            </form>
-        </div>
+<!doctype html>
+<html lang="en">
+  <head>
 
-        <!-- Seção de Quizzes (inicialmente escondida) -->
-        <div id="quizSection" class="hidden">
-            <h2>Quizzes Disponíveis</h2>
-            <div id="quizList"></div>
-
-            <!-- Área do Quiz Atual (inicialmente escondida) -->
-            <div id="activeQuiz" class="hidden">
-                <h3 id="quizTitle"></h3>
-                <p id="questionText"></p>
-                <div id="options"></div>
-                <button id="submitAnswer" onclick="submitQuiz()">Enviar Resposta</button>
-                <button id="backToList" onclick="showQuizList()">Voltar para Lista</button>
-            </div>
-        </div>
-    </div>
-    <script src="script.js"></script>
-</body>
+    
+    <!--Font Awesome-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <!--Google Fonts-->
+    <link href='https://fonts.googleapis.com/css?family=Just Another Hand' rel='stylesheet'>  
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+          
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="src/Imagens/LogoDoutoresAmbientais.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Doutores Ambientais</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>
