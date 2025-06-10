@@ -29,26 +29,26 @@ export class ManagementRepository implements IManagementRepository {
         return users;
     }
 
-    async findUserByClass(ClassId: number): Promise<User[]> {
+    async findUserByClass(classId: number): Promise<User[]> {
         const users = await executeQuery<User[]>(
-            'SELECT * FROM usuarios WHERE turma_id = ?', 
-            [ClassId]
+            'SELECT * FROM usuarios WHERE class_id = ?', 
+            [classId]
         );
         return users;
     }
 
     async create(user: User): Promise<User> {
         const result = await executeQuery<{ insertId: number }>(
-            'INSERT INTO usuarios (nome, email, password, role, turma_id) VALUES (?, ?, ?, ?, ?)', 
-            [user.nome, user.email, user.password, user.role, user.turma_id]
+            'INSERT INTO usuarios (nome, email, password, role, class_id) VALUES (?, ?, ?, ?, ?)', 
+            [user.nome, user.email, user.password, user.role, user.class_id]
         );
         return { ...user, id: result.insertId };
     }
 
     async update(user: User): Promise<User> {
         await executeQuery(
-            'UPDATE usuarios SET nome = ?, email = ?, password = ?, role = ?, turma_id = ? WHERE id = ?',
-            [user.nome, user.email, user.password, user.role, user.turma_id, user.id]
+            'UPDATE usuarios SET nome = ?, email = ?, password = ?, role = ?, class_id = ? WHERE id = ?',
+            [user.nome, user.email, user.password, user.role, user.class_id, user.id]
         );
         return user;
     }
@@ -145,14 +145,14 @@ export class ManagementRepository implements IManagementRepository {
 
         async addStudentToClass(userId: number, classId: number): Promise<void> {
             await executeQuery(
-                'UPDATE usuarios SET turma_id = ? WHERE id = ? AND role = "aluno"',
+                'UPDATE usuarios SET class_id = ? WHERE id = ? AND role = "aluno"',
                 [classId, userId]
             );
         }
 
         async removeStudentFromClass(userId: number, classId: number): Promise<void> {
             await executeQuery(
-                'UPDATE usuarios SET turma_id = NULL WHERE id = ? AND turma_id = ?',
+                'UPDATE usuarios SET class_id = NULL WHERE id = ? AND class_id = ?',
                 [userId, classId]
             );
         }
@@ -200,6 +200,13 @@ export class ManagementRepository implements IManagementRepository {
             await executeQuery(
                 'DELETE FROM quizzes WHERE id = ?',
                 [id]
+            );
+        }
+
+        async findQuizzesByClass(classId: number): Promise<Quiz[]> {
+            return await executeQuery<Quiz[]>(
+                'SELECT * FROM quizzes WHERE atividade_id IN (SELECT id FROM atividades WHERE class_id = ?)',
+                [classId]
             );
         }
 }

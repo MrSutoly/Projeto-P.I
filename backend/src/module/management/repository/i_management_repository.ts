@@ -1,6 +1,6 @@
-import { User } from '../../../shared/entitie/user_type';
-import { Class } from '../../../shared/entitie/class_type';
-import { Quiz, Question, Option } from '../../../shared/entitie/quiz_type';
+import { User } from '../../../shared/util/entities/user_type';
+import { Class } from '../../../shared/util/entities/class_type';
+import { Quiz, Question, Option } from '../../../shared/util/entities/quiz_type';
 
 export interface IManagementRepository {
     // User Management
@@ -28,6 +28,7 @@ export interface IManagementRepository {
     findQuizById(id: number): Promise<Quiz | null>;
     findAllQuizzes(): Promise<Quiz[]>;
     findQuizzesByTeacher(teacherId: number): Promise<Quiz[]>;
+    findQuizzesByClass(classId: number): Promise<Quiz[]>;
     findFullQuizById(id: number): Promise<Quiz | null>;
     updateQuiz(quiz: Quiz): Promise<Quiz>;
     deleteQuiz(id: number): Promise<void>;

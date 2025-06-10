@@ -319,4 +319,11 @@ export class ManagementUseCase {
             throw new AppError('Erro ao buscar quizzes da turma', 500);
         }
     }
+
+    async deleteQuiz(id: number): Promise<void> {
+        if (!id) {
+            throw new AppError('ID do quiz é obrigatório', 400);
+        }
+        await this.managementRepository.deleteQuiz(id);
+    }
 }
