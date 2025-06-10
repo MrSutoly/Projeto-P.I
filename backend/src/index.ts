@@ -10,7 +10,6 @@ import { ensureAuthenticated } from './module/auth/middleware/ensure_authenticat
 import loginRouter from "./module/login/http/routes/login_route";
 import registerRouter from "./module/register/http/routes/register_route";
 import managementRouter from './module/management/http/routes/management_route';
-import quizRouter from './module/quizmanagement/http/routes/quiz_route';
 import teachRouter from './module/teachmanagement/http/routes/teach_route';
 
 const PORT = process.env.PORT || 3000;
@@ -20,7 +19,6 @@ app.use('/api', registerRouter);
 
 // Rotas protegidas (precisam de autenticação)
 app.use('/api/management', managementRouter);
-app.use('/api', quizRouter);
 app.use('/api', teachRouter);
 
 app.listen(PORT, () => {

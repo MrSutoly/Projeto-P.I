@@ -1,19 +1,21 @@
 import { Router } from 'express';
 import { container } from 'tsyringe';
-import { ActivityController } from '../controller/activity_controller';
+import { TeachController } from '../controller/teach_controller';
 import { ensureAuthenticated } from '../../../auth/middleware/ensure_authenticated';
+import { ensureTeacher } from '../../../auth/middleware/ensure_teacher';
 
 const teachRouter = Router();
-const activityController = container.resolve(ActivityController);
+const teachController = container.resolve(TeachController);
 
-// Middleware de autenticação
 teachRouter.use(ensureAuthenticated);
+teachRouter.use(ensureTeacher);
 
-// Rotas de atividades
-teachRouter.post('/activities', (req, res) => activityController.create(req, res));
-teachRouter.get('/activities', (req, res) => activityController.getAll(req, res));
-teachRouter.get('/activities/:id', (req, res) => activityController.getById(req, res));
-teachRouter.put('/activities/:id', (req, res) => activityController.update(req, res));
-teachRouter.delete('/activities/:id', (req, res) => activityController.delete(req, res));
+teachRouter.get('/teacher/classes', (req, res) => 
+    teachController.handleGetTeacherClasses(req, res)
+);
 
-export default teachRouter; 
+teachRouter.get('/teacher/quizzes', (req, res) => 
+    teachController.handleGetTeacherQuizzes(req, res)
+);
+
+export default teachRouter;

@@ -1,26 +1,18 @@
 import { injectable, inject } from 'tsyringe';
 import { Request, Response } from 'express';
-import { CreateQuizUseCase } from '../../use-case/quiz_use_case'; 
+import { ManagementUseCase } from '../../../use-case/management_use_case';
 
 @injectable()
 export class CreateQuizController {
     constructor(
-        @inject(CreateQuizUseCase)
-        private createQuizUseCase: CreateQuizUseCase
+        @inject(ManagementUseCase)
+        private managementUseCase: ManagementUseCase
     ) {}
 
     async handle(req: Request, res: Response): Promise<Response> {
         try {
-            const { titulo, tipo, atividade_id, pergunta, opcoes } = req.body;
-
-            const quiz = await this.createQuizUseCase.execute({
-                titulo,
-                tipo,
-                atividade_id,
-                pergunta,
-                opcoes
-            });
-
+            const quizData = req.body;
+            const quiz = await this.managementUseCase.createQuiz(quizData);
             return res.status(201).json(quiz);
         } catch (error: any) {
             return res.status(400).json({
