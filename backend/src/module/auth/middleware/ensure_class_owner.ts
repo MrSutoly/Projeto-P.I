@@ -10,7 +10,7 @@ export const ensureClassOwner = async (req: Request, res: Response, next: NextFu
     const { turma_id } = req.params;
     const managementRepository = container.resolve<IManagementRepository>('ManagementRepository');
     
-    const turma = await managementRepository.findTurmaById(Number(turma_id));
+    const turma = await managementRepository.findClassById(Number(turma_id));
     
     if (!turma) {
         return res.status(404).json({ message: 'Turma não encontrada' });

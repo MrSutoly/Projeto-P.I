@@ -1,6 +1,7 @@
 import { injectable, inject } from 'tsyringe';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { TeachUseCase } from '../../use-case/teach_use_case';
+import { AuthenticatedRequest } from '../../../../shared/types/express';
 
 @injectable()
 export class TeachController {
@@ -9,7 +10,7 @@ export class TeachController {
         private teachUseCase: TeachUseCase
     ) {}
 
-    async handleGetTeacherClasses(req: Request, res: Response): Promise<Response> {
+    async handleGetTeacherClasses(req: AuthenticatedRequest, res: Response): Promise<Response> {
         try {
             const professor_id = req.user?.id;
             if (!professor_id) {
@@ -25,7 +26,7 @@ export class TeachController {
         }
     }
 
-    async handleGetTeacherQuizzes(req: Request, res: Response): Promise<Response> {
+    async handleGetTeacherQuizzes(req: AuthenticatedRequest, res: Response): Promise<Response> {
         try {
             const professor_id = req.user?.id;
             if (!professor_id) {

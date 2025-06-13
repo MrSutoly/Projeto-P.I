@@ -21,7 +21,7 @@ export class ManagementController {
                 email,
                 password,
                 role,
-                turma_id: Number(turma_id)
+                class_id: Number(turma_id)
             });
             return res.status(201).json(user);
         } catch (err: any) {

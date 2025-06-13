@@ -1,4 +1,4 @@
-import { Quiz, Question, Option } from '../../../shared/entitie/quiz_type';
+import { Quiz, Question, Option } from '../../../shared/util/entities/quiz_type';
 
 export interface IQuizRepository {
     createQuiz(quiz: Quiz): Promise<Quiz>;
