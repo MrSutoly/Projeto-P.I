@@ -10,6 +10,7 @@ import {
     QuizResponse, 
     QuizResult 
 } from '../../../shared/util/entities/quiz_type';
+import { QuizSession, AlunoResposta, Pontuacao } from '../../../shared/util/entities/quiz_type';
 
 @injectable() 
 export class ManagementRepository implements IManagementRepository {
@@ -208,5 +209,79 @@ export class ManagementRepository implements IManagementRepository {
                 'SELECT * FROM quizzes WHERE atividade_id IN (SELECT id FROM atividades WHERE class_id = ?)',
                 [classId]
             );
+        }
+
+        async findSessaoById(id: number): Promise<QuizSession | null> {
+            const [sessao] = await executeQuery<QuizSession[]>(
+                'SELECT * FROM quiz_sessions WHERE id = ?',
+                [id]
+            );
+            return sessao || null;
+        }
+
+        async findRespostasAluno(sessaoId: number, alunoId: number): Promise<AlunoResposta[]> {
+            return await executeQuery<AlunoResposta[]>(
+                'SELECT * FROM quiz_respostas_alunos WHERE sessao_id = ? AND aluno_id = ?',
+                [sessaoId, alunoId]
+            );
+        }
+
+        async findOpcaoById(id: number): Promise<Option | null> {
+            const [opcao] = await executeQuery<Option[]>(
+                'SELECT * FROM opcoes WHERE id = ?',
+                [id]
+            );
+            return opcao || null;
+        }
+
+        async findAlunosParticipantes(sessaoId: number): Promise<User[]> {
+            return await executeQuery<User[]>(
+                `SELECT DISTINCT u.* 
+                 FROM usuarios u 
+                 INNER JOIN quiz_respostas_alunos qra ON u.id = qra.aluno_id 
+                 WHERE qra.sessao_id = ? AND u.role = 'aluno'`,
+                [sessaoId]
+            );
+        }
+
+        async salvarPontuacao(pontuacao: Pontuacao): Promise<void> {
+            await executeQuery(
+                `INSERT INTO pontuacoes (pontos, aluno_id, sessao_id, turma_id) 
+                 VALUES (?, ?, ?, ?)`,
+                [pontuacao.pontos, pontuacao.aluno_id, pontuacao.sessao_id, pontuacao.turma_id]
+            );
+        }
+
+        async findPontuacoesAluno(alunoId: number): Promise<Array<{
+            sessao_id: number,
+            quiz_titulo: string,
+            pontos: number,
+            data: Date
+        }>> {
+            return await executeQuery(
+                `SELECT p.sessao_id, q.titulo as quiz_titulo, p.pontos, qs.criado_em as data
+                 FROM pontuacoes p
+                 INNER JOIN quiz_sessions qs ON p.sessao_id = qs.id
+                 INNER JOIN quizzes q ON qs.quiz_id = q.id
+                 WHERE p.aluno_id = ?
+                 ORDER BY qs.criado_em DESC`,
+                [alunoId]
+            );
+        }
+
+        async finalizarSessao(sessaoId: number): Promise<QuizSession> {
+            const [sessao] = await executeQuery<QuizSession[]>(
+                `UPDATE quiz_sessions 
+                 SET status = 'finalizado' 
+                 WHERE id = ? 
+                 RETURNING *`,
+                [sessaoId]
+            );
+
+            if (!sessao) {
+                throw new Error('Erro ao finalizar sessão');
+            }
+
+            return sessao;
         }
 }
