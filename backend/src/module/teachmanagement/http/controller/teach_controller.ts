@@ -26,14 +26,9 @@ export class TeachController {
         }
     }
 
-    async handleGetTeacherQuizzes(req: AuthenticatedRequest, res: Response): Promise<Response> {
+    async handleGetAllQuizzes(req: AuthenticatedRequest, res: Response): Promise<Response> {
         try {
-            const professor_id = req.user?.id;
-            if (!professor_id) {
-                return res.status(401).json({ message: 'Professor não autenticado' });
-            }
-
-            const quizzes = await this.teachUseCase.getTeacherQuizzes(professor_id);
+            const quizzes = await this.teachUseCase.getAllQuizzes();
             return res.json(quizzes);
         } catch (error: any) {
             return res.status(error.statusCode || 400).json({

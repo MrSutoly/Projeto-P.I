@@ -6,6 +6,6 @@ export interface ITeachRepository {
     
     findTeacherClasses(professor_id: number): Promise<Class[]>;
     
-    findTeacherQuizzes(professor_id: number): Promise<Quiz[]>;
+    findAllQuizzes(): Promise<Quiz[]>;
     
 }

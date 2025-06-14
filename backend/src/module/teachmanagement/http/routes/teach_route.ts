@@ -14,8 +14,8 @@ teachRouter.get('/teacher/classes', (req, res) =>
     teachController.handleGetTeacherClasses(req, res)
 );
 
-teachRouter.get('/teacher/quizzes', (req, res) => 
-    teachController.handleGetTeacherQuizzes(req, res)
+teachRouter.get('/quizzes', (req, res) => 
+    teachController.handleGetAllQuizzes(req, res)
 );
 
 export default teachRouter;
