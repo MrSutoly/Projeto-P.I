@@ -182,4 +182,15 @@ CREATE TABLE IF NOT EXISTS fotos (
     FOREIGN KEY (upload_por) REFERENCES usuarios(id) ON DELETE CASCADE
 );
 
+-- Tabela para armazenar médias dos quizzes por turma
+CREATE TABLE IF NOT EXISTS quiz_medias_turma (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    turma_id INT NOT NULL,
+    media_geral DECIMAL(5,2) NOT NULL,
+    total_quizzes INT NOT NULL,
+    ultima_atualizacao DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (turma_id) REFERENCES turmas(id),
+    UNIQUE KEY unique_turma (turma_id)
+);
+
 ALTER TABLE quizzes ADD COLUMN pontos INT NOT NULL DEFAULT 0;

@@ -66,3 +66,11 @@ export interface Pontuacao {
     sessao_id: number;
     turma_id: number;
 }
+
+export interface QuizMedia {
+    id?: number;
+    turma_id: number;
+    media_geral: number;
+    total_quizzes: number;
+    ultima_atualizacao?: Date;
+}

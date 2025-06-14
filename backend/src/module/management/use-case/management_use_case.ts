@@ -413,6 +413,29 @@ export class ManagementUseCase {
         }
     }
 
+    private async atualizarMediaTurma(turmaId: number, novaMedia: number): Promise<void> {
+        const mediaAtual = await this.managementRepository.obterMediaTurma(turmaId);
+        
+        if (mediaAtual) {
+            // Soma todas as médias e divide pelo total de quizzes
+            const somaMedias = (mediaAtual.media_geral * mediaAtual.total_quizzes) + novaMedia;
+            const novaMediaGeral = somaMedias / (mediaAtual.total_quizzes + 1);
+            
+            await this.managementRepository.atualizarMediaTurma(
+                turmaId,
+                novaMediaGeral,
+                mediaAtual.total_quizzes + 1
+            );
+        } else {
+            // Primeiro quiz da turma
+            await this.managementRepository.atualizarMediaTurma(
+                turmaId,
+                novaMedia, // A média do primeiro quiz é a média geral
+                1
+            );
+        }
+    }
+
     async finalizarSessaoQuiz(sessaoId: number): Promise<{
         sessao: QuizSession;
         mediaTurma: number;
@@ -433,6 +456,9 @@ export class ManagementUseCase {
 
             // Calcular média da turma
             const { media, totalAlunos } = await this.calcularMediaTurma(sessaoId);
+            
+            // Atualizar média geral da turma
+            await this.atualizarMediaTurma(sessao.turma_id, media);
 
             // Finalizar a sessão
             const sessaoFinalizada = await this.managementRepository.finalizarSessao(sessaoId);

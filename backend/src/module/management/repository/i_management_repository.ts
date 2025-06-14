@@ -1,6 +1,6 @@
 import { User } from '../../../shared/util/entities/user_type';
 import { Class } from '../../../shared/util/entities/class_type';
-import { Quiz, Question, Option } from '../../../shared/util/entities/quiz_type';
+import { Quiz, Question, Option, QuizMedia } from '../../../shared/util/entities/quiz_type';
 
 // Interfaces para pontuação
 interface QuizSession {
@@ -69,4 +69,10 @@ export interface IManagementRepository {
     findAlunosParticipantes(sessaoId: number): Promise<User[]>;
     salvarPontuacao(pontuacao: Pontuacao): Promise<void>;
     finalizarSessao(sessaoId: number): Promise<QuizSession>;
+
+    // Métodos para gerenciar médias
+    atualizarMediaTurma(turmaId: number, novaMedia: number, totalQuizzes: number): Promise<QuizMedia>;
+    obterMediaTurma(turmaId: number): Promise<QuizMedia | null>;
+    obterTodasMediasTurmas(): Promise<QuizMedia[]>;
+    findPontuacoesSessao(sessaoId: number): Promise<Pontuacao[]>;
 }
