@@ -5,9 +5,11 @@ import './module/auth/container/container';
 import './module/management/container/container';
 import './module/teachmanagement/container/container';
 import './module/album/container/container';
+import './module/ranking/container/container';
 import { app } from "./shared/config/server";
 import { ensureAuthenticated } from './module/auth/middleware/ensure_authenticated';
 import loginRouter from "./module/login/http/routes/login_route";
+import rankingRouter from './module/ranking/http/routes/ranking_route';
 import registerRouter from "./module/register/http/routes/register_route";
 import albumRouter from './module/album/http/routes/album_route';
 import managementRouter from './module/management/http/routes/management_route';
@@ -16,12 +18,10 @@ import express from 'express';
 
 const PORT = process.env.PORT || 3000;
 
-// Rotas públicas
 app.use('/api', loginRouter);
 app.use('/api', registerRouter);
 app.use('/api', albumRouter);
-
-
+app.use('/api', rankingRouter);
 app.use('/api/management', managementRouter);
 app.use('/api/teach', teachRouter);
 
