@@ -1,40 +1,46 @@
 import { Navbar_dados } from './Navbar_dados';
 import './Navbar_style.css';
-import { Component } from 'react';
+import { useState } from 'react';
+import { useAuth } from '../../contexts/AuthContext';
 
-class Navbar extends Component {
-  state = {clicked: false};
+function Navbar() {
+  const [clicked, setClicked] = useState(false);
+  const { token, logout } = useAuth();
 
-  handleClick = () => {
-    this.setState({clicked:!this.state.clicked})
-  }
+  const handleClick = () => {
+    setClicked(!clicked);
+  };
 
-  render(){
-    return (
-          <div className="navbar-header">
-            <nav id="navbar" className={this.state.clicked ? "active" : ""}>
-              <div className="navbar-top">
-                <div id="mobile" onClick={this.handleClick}>
-                  <i id="bar" className={this.state.clicked ? 'fas fa-times' : 'fas fa-bars'}></i>
-                </div>
-                <div id="titulo-header">Doutores Ambientais Mirins</div>
-              </div>
-
-              {this.state.clicked && <div className="overlay" onClick={this.handleClick}></div>}
-
-              <ul className="navbarLista">
-                {Navbar_dados.map((val, key) => (
-                  <li key={key} className='item' onClick={() => {window.location.pathname = val.link}}>
-                    <div id='icone'>{val.icone}</div>
-                    <div id='nome'>{val.nome}</div>
-                  </li>
-                ))}
-              </ul>
-
-            </nav>
+  return (
+    <div className="navbar-header">
+      <nav id="navbar" className={clicked ? "active" : ""}>
+        <div className="navbar-top">
+          <div id="mobile" onClick={handleClick}>
+            <i id="bar" className={clicked ? 'fas fa-times' : 'fas fa-bars'}></i>
           </div>
-    )
-  }
+          <div id="titulo-header">Doutores Ambientais Mirins</div>
+        </div>
+
+        {clicked && <div className="overlay" onClick={handleClick}></div>}
+
+        <ul className="navbarLista">
+          {Navbar_dados.map((val, key) => (
+            <li key={key} className='item' onClick={() => {window.location.pathname = val.link}}>
+              <div id='icone'>{val.icone}</div>
+              <div id='nome'>{val.nome}</div>
+            </li>
+          ))}
+          {token && (
+            <li className='item' onClick={logout} style={{color: 'red', fontWeight: 'bold', cursor: 'pointer'}}>
+              <div id='icone'><i className="fa-solid fa-right-from-bracket"></i></div>
+              <div id='nome'>Sair</div>
+            </li>
+          )}
+        </ul>
+
+      </nav>
+    </div>
+  );
 }
 
 export default Navbar

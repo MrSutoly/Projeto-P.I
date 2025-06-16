@@ -1,7 +1,7 @@
 import { injectable, inject } from 'tsyringe';
 import { Request, Response } from 'express';
 import { ManagementUseCase } from '../../../use-case/management_use_case';
-import { User } from '../../../../../shared/entitie/user_type';
+import { User } from '../../../../../shared/util/entities/user_type';
 
 @injectable()
 export class UpdateUserController {

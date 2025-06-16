@@ -30,11 +30,11 @@ export const Navbar_dados = [
         icone: <i className="fa-solid fa-paper-plane"></i>,
         link: "/Percurso",
     },
-    {
+    /*{
         nome: "Trilha", 
         icone: <i className="fa-solid fa-truck-moving"></i>,
         link: "/Trilha",
-    },
+    },*/
     {
         nome: "Ranking", 
         icone: <i className="fa-solid fa-trophy"></i>,

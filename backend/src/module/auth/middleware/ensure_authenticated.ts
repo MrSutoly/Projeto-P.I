@@ -1,3 +1,4 @@
+/// <reference path="../../../@types/express/index.d.ts" />
 import { Request, Response, NextFunction } from 'express';
 import { container } from 'tsyringe';
 import { JWTService } from '../services/jwt_service';

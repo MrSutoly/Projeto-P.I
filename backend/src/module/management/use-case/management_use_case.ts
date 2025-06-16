@@ -1,8 +1,8 @@
 import { injectable, inject } from 'tsyringe';
 import { IManagementRepository } from '../repository/i_management_repository';
-import { User } from '../../../shared/entitie/user_type';
-import { Class } from '../../../shared/entitie/class_type';
-import { Quiz } from '../../../shared/entitie/quiz_type';
+import { User } from '../../../shared/util/entities/user_type';
+import { Class } from '../../../shared/util/entities/class_type';
+import { Quiz } from '../../../shared/util/entities/quiz_type';
 import { AppError } from '../../../shared/errors/AppError';
 import bcrypt from 'bcrypt';
 
@@ -199,7 +199,7 @@ export class ManagementUseCase {
                 throw new AppError('Cada pergunta deve ter pelo menos 2 opções', 400);
             }
 
-            const correctOptions = pergunta.opcoes.filter(opt => opt.correta);
+            const correctOptions = pergunta.opcoes.filter((opt: any) => opt.correta);
             if (correctOptions.length !== 1) {
                 throw new AppError('Cada pergunta deve ter exatamente uma opção correta', 400);
             }

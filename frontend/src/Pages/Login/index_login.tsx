@@ -2,23 +2,35 @@ import './login_style.css';
 import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
 import { useState } from 'react';
-//import { useNavigate } from 'react-router-dom';
 import Logo from '../../Imagens/LogoDoutoresAmbientais.png';
+import api from '../../services/api';
+import { useAuth } from '../../contexts/AuthContext';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [erro, setErro] = useState('');
-  //const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !senha) {
       setErro('Preencha todos os campos para entrar.');
       return;
     }
     setErro('');
-    // Implementação futura do back
+    setLoading(true);
+    try {
+      const response = await api.post('/login', { email, password: senha });
+      const { token } = response.data;
+      login(token);
+      window.location.href = '/Home';
+    } catch (err: any) {
+      setErro(err.response?.data?.message || 'Erro ao fazer login.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -52,8 +64,8 @@ function Login() {
                 className="login-input-new"
               />
               {erro && <div className="login-erro-new">{erro}</div>}
-              <button type="submit" className="login-btn-new" disabled={!email || !senha}>
-                Entrar
+              <button type="submit" className="login-btn-new" disabled={!email || !senha || loading}>
+                {loading ? 'Entrando...' : 'Entrar'}
               </button>
             </form>
           </div>
@@ -62,6 +74,4 @@ function Login() {
       <Footer />
     </>
   );
-}
-
-export default Login;
+} export default Login;

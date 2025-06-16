@@ -42,7 +42,6 @@
     left: 0;
 }
 
-
 /* Estilo dos itens */
 .navbarLista .item {
     padding: 15px;
@@ -84,10 +83,7 @@
 
 /****************************************************************************************************************/
 @media screen and (min-width: 769px) {
-    /* 
-        Navbar-top 
-    */
-
+    /* Esconder elementos mobile */
     .navbar-top{
         display: none;
     }
@@ -100,15 +96,16 @@
         display: none;
     }
 
-    /*
-        navbar
-    */    
-
+    /* Navbar sempre visível na lateral */
     #navbar {
         margin: 0;
         padding: 0;
-        width: 70px; /* barra mais fina */
+        width: 70px;
+        height: 100vh;
         align-items: center;
+        position: fixed;
+        top: 0;
+        left: 0;
     }
 
     .navbarLista {
@@ -119,12 +116,10 @@
         left: 0;
         padding: 0;
         margin: 0;
+        background: #03C1A7;
     }
 
-    /*
-        Itens
-    */
-
+    /* Itens da navbar */
     .navbarLista .item {
         display: flex;
         flex-direction: column;
@@ -135,26 +130,25 @@
         box-sizing: border-box;
         border-bottom: none;
         margin-bottom: 2px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
     }
 
     .navbarLista .item:hover {
-        cursor: pointer;
-        /* background: #FF9A92; */
-        background: rgba(0, 0, 0, 0.7);
+        background: rgba(0, 0, 0, 0.2);
     }
 
     .navbarLista .item:hover #nome{
-        /* color: #313130; */
         color: #fff;
     }
 
     .navbarLista .item:hover #icone i {
-        /* color: #313130; */
         color: #fff;
     }
 
     #icone i{
         font-size: 20px;
+        color: #fff;
     }
 
     #nome {
@@ -162,5 +156,6 @@
         margin-top: 5px;
         text-transform: uppercase;
         font-weight: bold;
+        color: #fff;
     }
 }

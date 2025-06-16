@@ -1,6 +1,6 @@
 import { injectable, inject } from 'tsyringe';
 import { IQuizRepository } from '../repository/i_quiz_repository';
-import { Quiz } from '../../../shared/entitie/quiz_type';
+import { Quiz } from '../../../shared/util/entities/quiz_type';
 
 @injectable()
 export class ShowQuizUseCase {

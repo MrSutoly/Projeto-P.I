@@ -1,8 +1,8 @@
 import { injectable, inject } from 'tsyringe';
 import { ITeachRepository } from '../repository/i_teach_repository';
 import { TeacherSession, StudentResponse, ConnectedStudent } from '../type/teach_type';
-import { Class } from '../../../shared/entitie/class_type';
-import { Quiz } from '../../../shared/entitie/quiz_type';
+import { Class } from '../../../shared/util/entities/class_type';
+import { Quiz } from '../../../shared/util/entities/quiz_type';
 import { AppError } from '../../../shared/errors/AppError';
 
 @injectable()

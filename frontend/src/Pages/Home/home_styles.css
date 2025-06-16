@@ -25,9 +25,25 @@ html, body {
   flex-grow: 1;
   padding-top: 10px; /* altura da navbar */
   margin-bottom: 0;
+  width: 100%;
 }
 
 .footer{
   min-height: auto;
+}
+
+/* Responsividade - em mobile a navbar é mobile */
+@media screen and (max-width: 768px) {
+  .Main {
+    margin-top: 60px; /* espaço para a navbar mobile no topo */
+  }
+}
+
+/* Em desktop a navbar é lateral fixa */
+@media screen and (min-width: 769px) {
+  .Main {
+    margin-left: 0; /* sem margem pois o conteúdo já tem margin-left no seu CSS */
+    margin-top: 0;
+  }
 }
 

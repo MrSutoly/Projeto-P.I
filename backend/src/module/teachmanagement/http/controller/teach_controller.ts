@@ -1,3 +1,4 @@
+/// <reference path="../../../../@types/express/index.d.ts" />
 import { injectable, inject } from 'tsyringe';
 import { Request, Response } from 'express';
 import { TeachUseCase } from '../../use-case/teach_use_case';

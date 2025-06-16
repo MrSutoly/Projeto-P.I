@@ -1,52 +1,66 @@
 import mysql from 'mysql2/promise';
-import { AppError } from '../../errors/AppError';
+import { config } from '../../config/env';
 
-const pool = mysql.createPool({
-    host: process.env.DB_HOST || 'localhost',
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || '',
-    database: process.env.DB_NAME || 'quiz_db',
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
-});
+let pool: mysql.Pool;
 
-export async function executeQuery<T>(query: string, params?: any[]): Promise<T> {
+export function initializeDatabase() {
     try {
-        const [result] = await pool.execute(query, params);
-        return result as T;
-    } catch (error: any) {
-        console.error('Database error:', error);
-        throw new AppError(
-            'Erro ao executar operação no banco de dados',
-            500
-        );
+        pool = mysql.createPool({
+            host: config.database.host,
+            port: config.database.port,
+            user: config.database.user,
+            password: config.database.password,
+            database: config.database.name,
+            waitForConnections: true,
+            connectionLimit: 10,
+            queueLimit: 0
+        });
+
+        console.log('Pool de conexões MySQL inicializado com sucesso');
+    } catch (error) {
+        console.error('Erro ao inicializar pool de conexões MySQL:', error);
+        throw error;
     }
 }
 
-export async function executeTransaction<T>(
-    queries: { query: string; params?: any[] }[]
-): Promise<T> {
-    const connection = await pool.getConnection();
-    try {
-        await connection.beginTransaction();
+// Executar queries no banco de dados
+export async function executeQuery<T = any>(query: string, params?: any[]): Promise<T> {
+    if (!pool) {
+        throw new Error('Pool de conexões não inicializado. Chame initializeDatabase() primeiro.');
+    }
 
-        for (const { query, params } of queries) {
-            await connection.execute(query, params);
+    try {
+        const [rows] = await pool.execute(query, params);
+        return rows as T;
+    } catch (error) {
+        console.error('Erro ao executar query:', error);
+        console.error('Query:', query);
+        console.error('Params:', params);
+        throw error;
+    }
+}
+
+// Fechar pool de conexões
+export async function closeDatabase() {
+    if (pool) {
+        try {
+            await pool.end();
+            console.log('Pool de conexões MySQL fechado com sucesso');
+        } catch (error) {
+            console.error('Erro ao fechar pool de conexões MySQL:', error);
+            throw error;
         }
-
-        await connection.commit();
-        return {} as T;
-    } catch (error: any) {
-        await connection.rollback();
-        console.error('Transaction error:', error);
-        throw new AppError(
-            'Erro ao executar transação no banco de dados',
-            500
-        );
-    } finally {
-        connection.release();
     }
 }
 
-export default pool;
+// Testar conexão 
+export async function testConnection(): Promise<boolean> {
+    try {
+        await executeQuery('SELECT 1 as test');
+        console.log('Conexão com MySQL testada com sucesso');
+        return true;
+    } catch (error) {
+        console.error('Falha no teste de conexão com MySQL:', error);
+        return false;
+    }
+} 

@@ -1,7 +1,7 @@
 import { injectable } from 'tsyringe';
 import { executeQuery } from '../../../shared/database/mysql/db';
 import { IQuizRepository } from './i_quiz_repository';
-import { Quiz, Question, Option } from '../../../shared/entitie/quiz_type'; 
+import { Quiz, Question, Option } from '../../../shared/util/entities/quiz_type'; 
 @injectable()
 export class QuizRepository implements IQuizRepository {
     async createQuiz(quiz: Quiz): Promise<Quiz> {

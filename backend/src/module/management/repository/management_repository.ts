@@ -9,7 +9,7 @@ import {
     Option, 
     QuizResponse, 
     QuizResult 
-} from '../../../shared/entitie/quiz_type';
+} from '../../../shared/util/entities/quiz_type';
 
 @injectable() 
 export class ManagementRepository implements IManagementRepository {

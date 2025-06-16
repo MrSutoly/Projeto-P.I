@@ -1,7 +1,12 @@
 import './Logo.css';
 import Logo_imagem from '../../Imagens/LogoDoutoresAmbientais.png';
+import React from 'react';
 
-const Logo = ({ esconderImagem }) => {
+interface LogoProps {
+  esconderImagem?: boolean;
+}
+
+const Logo: React.FC<LogoProps> = ({ esconderImagem = false }) => {
   return (
     <div id="Logo">
       <div id="Logo_texto">
@@ -17,4 +22,4 @@ const Logo = ({ esconderImagem }) => {
   );
 };
 
-export default Logo;
+export default Logo; 
