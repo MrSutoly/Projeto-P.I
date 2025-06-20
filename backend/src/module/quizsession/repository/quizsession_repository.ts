@@ -21,6 +21,14 @@ export class QuizSessionRepository implements IQuizSessionRepository {
         return session || null;
     }
 
+    async findSessionById(id: number): Promise<QuizSession | null> {
+        const [session] = await executeQuery<QuizSession[]>(
+            'SELECT * FROM quiz_sessions WHERE id = ?',
+            [id]
+        );
+        return session || null;
+    }
+
     async connectStudent(sessao_id: number, aluno_id: number): Promise<void> {
         await executeQuery(
             'INSERT IGNORE INTO quiz_alunos_conectados (sessao_id, aluno_id, status) VALUES (?, ?, "conectado")',

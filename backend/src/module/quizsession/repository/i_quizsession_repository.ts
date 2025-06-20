@@ -3,6 +3,7 @@ import { QuizSession, ConnectedStudent, StudentAnswer } from '../type/quizsessio
 export interface IQuizSessionRepository {
     createSession(session: QuizSession): Promise<QuizSession>;
     findSessionByCode(code: string): Promise<QuizSession | null>;
+    findSessionById(id: number): Promise<QuizSession | null>;
     connectStudent(sessao_id: number, aluno_id: number): Promise<void>;
     getConnectedStudents(sessao_id: number): Promise<ConnectedStudent[]>;
     startSession(sessao_id: number): Promise<void>;

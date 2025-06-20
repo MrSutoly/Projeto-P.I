@@ -87,8 +87,8 @@ export class ManagementRepository implements IManagementRepository {
 
     async updateClass(classData: Class): Promise<Class> {
         await executeQuery(
-            'UPDATE turmas SET nome = ?, codigo = ? WHERE id = ?',
-            [classData.nome, classData.codigo, classData.id]
+            'UPDATE turmas SET nome = ?, codigo = ?, pontos = ? WHERE id = ?',
+            [classData.nome, classData.codigo, classData.pontos, classData.id]
         );
         return classData;
     }

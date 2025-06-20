@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { container } from 'tsyringe';
-import { QuizSessionController } from '../controller/quizsession_controller';
+import { QuizSessionController } from '../controller/session';
 import { ensureAuthenticated } from '../../../auth/middleware/ensure_authenticated';
 
 const quizSessionRouter = Router();
