@@ -2,7 +2,7 @@ import { injectable, inject } from 'tsyringe';
 import { IManagementRepository } from '../repository/i_management_repository';
 import { User } from '../../../shared/util/entities/user_type';
 import { Class } from '../../../shared/util/entities/class_type';
-import { Quiz } from '../../../shared/util/entities/quiz_type';
+import { Quiz, QuizSession } from '../../../shared/util/entities/quiz_type';
 import { AppError } from '../../../shared/errors/AppError';
 import bcrypt from 'bcrypt';
 
@@ -171,6 +171,10 @@ export class ManagementUseCase {
             throw new AppError('Tipo de quiz inválido', 400);
         }
 
+        if (!quizData.pontos || quizData.pontos <= 0) {
+            throw new AppError('A quantidade de pontos é obrigatória e deve ser maior que zero', 400);
+        }
+
         // Validação das perguntas
         if (!quizData.perguntas || quizData.perguntas.length === 0) {
             throw new AppError('Quiz deve ter pelo menos uma pergunta', 400);
@@ -180,7 +184,8 @@ export class ManagementUseCase {
         const quiz = await this.managementRepository.createQuiz({
             titulo: quizData.titulo,
             tipo: quizData.tipo,
-            atividade_id: quizData.atividade_id
+            atividade_id: quizData.atividade_id,
+            pontos: quizData.pontos
         });
 
         if (!quiz.id) {
@@ -325,5 +330,150 @@ export class ManagementUseCase {
             throw new AppError('ID do quiz é obrigatório', 400);
         }
         await this.managementRepository.deleteQuiz(id);
+    }
+
+    // Métodos para gerenciamento de pontuações
+    async calcularMediaTurma(sessaoId: number): Promise<{ media: number, totalAlunos: number }> {
+        try {
+            const sessao = await this.managementRepository.findSessaoById(sessaoId);
+            if (!sessao) {
+                throw new AppError('Sessão não encontrada', 404);
+            }
+
+            // Buscar todos os alunos da turma que participaram da sessão
+            const alunos = await this.managementRepository.findAlunosParticipantes(sessaoId);
+            if (!alunos || alunos.length === 0) {
+                throw new AppError('Nenhum aluno participou desta sessão', 404);
+            }
+
+            let somaPontos = 0;
+            for (const aluno of alunos) {
+                if (aluno.id) { // Verifica se o ID existe
+                    const pontos = await this.calcularPontuacaoAluno(sessaoId, aluno.id);
+                    somaPontos += pontos;
+                }
+            }
+
+            const media = somaPontos / alunos.length;
+
+            return {
+                media: Number(media.toFixed(2)),
+                totalAlunos: alunos.length
+            };
+        } catch (error) {
+            if (error instanceof AppError) {
+                throw error;
+            }
+            throw new AppError('Erro ao calcular média da turma', 500);
+        }
+    }
+
+    async calcularPontuacaoAluno(sessaoId: number, alunoId: number): Promise<number> {
+        try {
+            // Buscar todas as respostas do aluno na sessão
+            const respostas = await this.managementRepository.findRespostasAluno(sessaoId, alunoId);
+            if (!respostas || respostas.length === 0) {
+                throw new AppError('Nenhuma resposta encontrada para este aluno nesta sessão', 404);
+            }
+
+            // Buscar informações do quiz
+            const sessao = await this.managementRepository.findSessaoById(sessaoId);
+            if (!sessao) {
+                throw new AppError('Sessão não encontrada', 404);
+            }
+
+            const quiz = await this.managementRepository.findQuizById(sessao.quiz_id);
+            if (!quiz) {
+                throw new AppError('Quiz não encontrado', 404);
+            }
+
+            // Calcular pontos
+            let pontosTotais = 0;
+            for (const resposta of respostas) {
+                const opcao = await this.managementRepository.findOpcaoById(resposta.resposta_id);
+                if (opcao && opcao.correta) {
+                    pontosTotais += quiz.pontos / respostas.length; // Distribui os pontos igualmente entre as perguntas
+                }
+            }
+
+            // Salvar pontuação
+            await this.managementRepository.salvarPontuacao({
+                pontos: pontosTotais,
+                aluno_id: alunoId,
+                sessao_id: sessaoId,
+                turma_id: sessao.turma_id
+            });
+
+            return pontosTotais;
+        } catch (error) {
+            if (error instanceof AppError) {
+                throw error;
+            }
+            throw new AppError('Erro ao calcular pontuação do aluno', 500);
+        }
+    }
+
+    private async atualizarMediaTurma(turmaId: number, novaMedia: number): Promise<void> {
+        const mediaAtual = await this.managementRepository.obterMediaTurma(turmaId);
+        
+        if (mediaAtual) {
+            // Soma todas as médias e divide pelo total de quizzes
+            const somaMedias = (mediaAtual.media_geral * mediaAtual.total_quizzes) + novaMedia;
+            const novaMediaGeral = somaMedias / (mediaAtual.total_quizzes + 1);
+            
+            await this.managementRepository.atualizarMediaTurma(
+                turmaId,
+                novaMediaGeral,
+                mediaAtual.total_quizzes + 1
+            );
+        } else {
+            // Primeiro quiz da turma
+            await this.managementRepository.atualizarMediaTurma(
+                turmaId,
+                novaMedia, // A média do primeiro quiz é a média geral
+                1
+            );
+        }
+    }
+
+    async finalizarSessaoQuiz(sessaoId: number): Promise<{
+        sessao: QuizSession;
+        mediaTurma: number;
+        totalAlunos: number;
+        status: 'finalizado';
+    }> {
+        try {
+            // Verificar se a sessão existe
+            const sessao = await this.managementRepository.findSessaoById(sessaoId);
+            if (!sessao) {
+                throw new AppError('Sessão não encontrada', 404);
+            }
+
+            // Verificar se a sessão já não está finalizada
+            if (sessao.status === 'finalizado') {
+                throw new AppError('Esta sessão já foi finalizada', 400);
+            }
+
+            // Calcular média da turma
+            const { media, totalAlunos } = await this.calcularMediaTurma(sessaoId);
+            
+            // Atualizar média geral da turma
+            await this.atualizarMediaTurma(sessao.turma_id, media);
+
+            // Finalizar a sessão
+            const sessaoFinalizada = await this.managementRepository.finalizarSessao(sessaoId);
+
+            return {
+                sessao: sessaoFinalizada,
+                mediaTurma: media,
+                totalAlunos,
+                status: 'finalizado'
+            };
+        } catch (error) {
+            if (error instanceof AppError) {
+                throw error;
+            }
+            throw new AppError('Erro ao finalizar sessão do quiz', 500);
+        }
     }
 }

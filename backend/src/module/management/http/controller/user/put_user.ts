@@ -13,9 +13,9 @@ export class UpdateUserController {
     async handle(req: Request, res: Response): Promise<Response> {
         try {
             const userId = Number(req.params.id);
-            const { nome, email, password, role, turma_id } = req.body;
+            const { nome, email, password, role, class_id } = req.body;
 
-            if (!userId || !nome || !email || !password || !role || !turma_id) {
+            if (!userId || !nome || !email || !password || !role || !class_id) {
                 return res.status(400).json({ message: 'Todos os campos são obrigatórios' });
             }
 
@@ -25,7 +25,7 @@ export class UpdateUserController {
                 email,
                 password,
                 role,
-                turma_id: Number(turma_id),
+                class_id: Number(class_id),
             });
 
             return res.status(200).json(updatedUser);

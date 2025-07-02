@@ -1,7 +1,8 @@
 /// <reference path="../../../../@types/express/index.d.ts" />
 import { injectable, inject } from 'tsyringe';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { TeachUseCase } from '../../use-case/teach_use_case';
+import { AuthenticatedRequest } from '../../../../shared/types/express';
 
 @injectable()
 export class TeachController {
@@ -10,7 +11,7 @@ export class TeachController {
         private teachUseCase: TeachUseCase
     ) {}
 
-    async handleGetTeacherClasses(req: Request, res: Response): Promise<Response> {
+    async handleGetTeacherClasses(req: AuthenticatedRequest, res: Response): Promise<Response> {
         try {
             const professor_id = req.user?.id;
             if (!professor_id) {
@@ -26,14 +27,9 @@ export class TeachController {
         }
     }
 
-    async handleGetTeacherQuizzes(req: Request, res: Response): Promise<Response> {
+    async handleGetAllQuizzes(req: AuthenticatedRequest, res: Response): Promise<Response> {
         try {
-            const professor_id = req.user?.id;
-            if (!professor_id) {
-                return res.status(401).json({ message: 'Professor não autenticado' });
-            }
-
-            const quizzes = await this.teachUseCase.getTeacherQuizzes(professor_id);
+            const quizzes = await this.teachUseCase.getAllQuizzes();
             return res.json(quizzes);
         } catch (error: any) {
             return res.status(error.statusCode || 400).json({

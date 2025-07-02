@@ -14,10 +14,9 @@ export class TeachRepository implements ITeachRepository {
         );
     }
 
-    async findTeacherQuizzes(professor_id: number): Promise<Quiz[]> {
+    async findAllQuizzes(): Promise<Quiz[]> {
         return await executeQuery<Quiz[]>(
-            'SELECT * FROM quizzes WHERE criado_por = ?',
-            [professor_id]
+            'SELECT * FROM quizzes'
         );
     }
 }

@@ -1,8 +1,16 @@
-import express from 'express';
+import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 
-export const app = express();
+import '../../module/quizsession/container/container';
+import '../../module/recycling/container/container';
+
+import managementRouter from '../../module/management/http/routes/management_route';
+import teachManagementRouter from '../../module/teachmanagement/http/routes/teach_route';
+import quizSessionRouter from '../../module/quizsession/http/routes/quizsession_route';
+import recyclingRouter from '../../module/recycling/http/routes/recycling_route';
+
+const app: Application = express();
 
 app.use(helmet());
 
@@ -29,3 +37,20 @@ app.get('/health', (req, res) => {
         uptime: process.uptime()
     });
 });
+
+app.use('/management', managementRouter);
+app.use('/teach', teachManagementRouter);
+app.use('/quiz', quizSessionRouter);
+app.use('/recycling', recyclingRouter);
+
+app.use(
+  (err: Error, request: Request, response: Response, next: NextFunction) => {
+    console.error('Erro na aplicação:', err);
+    return response.status(500).json({
+      error: 'Erro interno do servidor',
+      message: process.env.NODE_ENV === 'development' ? err.message : 'Algo deu errado'
+    });
+  }
+);
+
+export { app };

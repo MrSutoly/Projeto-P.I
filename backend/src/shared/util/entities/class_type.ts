@@ -3,4 +3,5 @@ export type Class = {
     nome: string;
     codigo: string;
     professor_id?: number;
+    pontos?: number;
 }
