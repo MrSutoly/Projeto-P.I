@@ -3,6 +3,12 @@ import { Request, Response, NextFunction } from 'express';
 import { container } from 'tsyringe';
 import { JWTService } from '../services/jwt_service';
 
+interface AuthenticatedRequest extends Request {
+    user?: {
+        id: number;
+    };
+}
+
 export const ensureAuthenticated = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
     const authHeader = req.headers.authorization;
 
@@ -21,7 +27,7 @@ export const ensureAuthenticated = async (req: Request, res: Response, next: Nex
             return res.status(401).json({ message: 'Token inválido.' });
         }
 
-        req.user = { id: decoded.id };
+        (req as AuthenticatedRequest).user = { id: Number(decoded.id) };
 
         return next();
 

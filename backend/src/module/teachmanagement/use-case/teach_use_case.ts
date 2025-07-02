@@ -19,10 +19,7 @@ export class TeachUseCase {
         return await this.teachRepository.findTeacherClasses(professor_id);
     }
 
-    async getTeacherQuizzes(professor_id: number): Promise<Quiz[]> {
-        if (!professor_id) {
-            throw new AppError('ID do professor é obrigatório', 400);
-        }
-        return await this.teachRepository.findTeacherQuizzes(professor_id);
+    async getAllQuizzes(): Promise<Quiz[]> {
+        return await this.teachRepository.findAllQuizzes();
     }
 }
