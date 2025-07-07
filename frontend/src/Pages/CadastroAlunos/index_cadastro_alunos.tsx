@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../contexts/AuthContext';
 import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
 import './cadastro_alunos_style.css';
@@ -9,20 +8,22 @@ interface Aluno {
   id: number;
   nome: string;
   email: string;
+  role: string;
   turma_id: number;
-  created_at: string;
+  turma?: {
+    id: number;
+    nome: string;
+  };
 }
 
 interface Turma {
   id: number;
   nome: string;
-  codigo?: string;
-  professor_id?: number;
+  codigo: string;
 }
 
 const CadastroAlunos: React.FC = () => {
   const navigate = useNavigate();
-  const { user } = useContext(AuthContext);
   const [alunos, setAlunos] = useState<Aluno[]>([]);
   const [turmas, setTurmas] = useState<Turma[]>([]);
   const [loading, setLoading] = useState(true);
@@ -184,145 +185,125 @@ const CadastroAlunos: React.FC = () => {
   }
 
   return (
-    <div className="cadastro-alunos-container">
-      <div className="login-top-bar">
-        <div className="login-top-content">
-          <h1>Doutores Ambientais Mirins</h1>
-        </div>
-      </div>
-
+    <div className="cadastro-alunos">
       <Navbar />
-      
-      <div className="conteudo">
-        <div className="conteudo-header">
-          <h2 className="conteudo-titulo">Gerenciar Alunos</h2>
-          <button className="btn-adicionar" onClick={openModal}>
-            + Adicionar Aluno
+      <div className="container">
+        <h1>Cadastro de Alunos</h1>
+        
+        <div className="actions">
+          <button className="btn-primary" onClick={openModal}>
+            Novo Aluno
           </button>
         </div>
 
-          <div className="alunos-list">
-            {alunos.length === 0 ? (
-              <p className="no-data">Nenhum aluno cadastrado ainda.</p>
-            ) : (
-              <table className="alunos-table">
-                <thead>
-                  <tr>
-                    <th>Nome</th>
-                    <th>Email</th>
-                    <th>Turma</th>
-                    <th>Data de Cadastro</th>
-                    <th>Ações</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {alunos.map(aluno => (
-                    <tr key={aluno.id}>
-                      <td>{aluno.nome}</td>
-                      <td>{aluno.email}</td>
-                      <td>{turmas.find(t => t.id === aluno.turma_id)?.nome || 'N/A'}</td>
-                      <td>{new Date(aluno.created_at).toLocaleDateString('pt-BR')}</td>
-                      <td>
-                        <button 
-                          className="btn-edit"
-                          onClick={() => handleEdit(aluno)}
-                        >
-                          Editar
-                        </button>
-                        <button 
-                          className="btn-delete"
-                          onClick={() => handleDelete(aluno.id)}
-                        >
-                          Excluir
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
-          </div>
+        <div className="tabela-container">
+          <table className="tabela-alunos">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Turma</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {alunos.map(aluno => (
+                <tr key={aluno.id}>
+                  <td>{aluno.id}</td>
+                  <td>{aluno.nome}</td>
+                  <td>{aluno.email}</td>
+                  <td>
+                    {turmas.find(t => t.id === aluno.turma_id)?.nome || 'N/A'}
+                  </td>
+                  <td>
+                    <button 
+                      className="btn-edit"
+                      onClick={() => handleEdit(aluno)}
+                    >
+                      Editar
+                    </button>
+                    <button 
+                      className="btn-delete"
+                      onClick={() => handleDelete(aluno.id)}
+                    >
+                      Excluir
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
 
-      {/* Modal de Cadastro/Edição */}
-      {showModal && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h3>{editingAluno ? 'Editar Aluno' : 'Novo Aluno'}</h3>
-              <button 
-                className="modal-close"
-                onClick={() => setShowModal(false)}
-              >
-                ×
-              </button>
+        {showModal && (
+          <div className="modal">
+            <div className="modal-content">
+              <h2>{editingAluno ? 'Editar Aluno' : 'Novo Aluno'}</h2>
+              <form onSubmit={handleSubmit}>
+                <div className="form-group">
+                  <label>Nome:</label>
+                  <input
+                    type="text"
+                    value={formData.nome}
+                    onChange={(e) => setFormData({...formData, nome: e.target.value})}
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Email:</label>
+                  <input
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({...formData, email: e.target.value})}
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Senha {editingAluno ? '(deixe em branco para não alterar)' : ''}:</label>
+                  <input
+                    type="password"
+                    value={formData.senha}
+                    onChange={(e) => setFormData({...formData, senha: e.target.value})}
+                    required={!editingAluno}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Turma:</label>
+                  <select
+                    value={formData.turma_id}
+                    onChange={(e) => setFormData({...formData, turma_id: e.target.value})}
+                    required
+                  >
+                    <option value="">Selecione uma turma</option>
+                    {turmas.map(turma => (
+                      <option key={turma.id} value={turma.id}>
+                        {turma.nome}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="form-actions">
+                  <button type="submit" className="btn-primary">
+                    {editingAluno ? 'Atualizar' : 'Cadastrar'}
+                  </button>
+                  <button 
+                    type="button" 
+                    className="btn-secondary" 
+                    onClick={() => setShowModal(false)}
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </form>
             </div>
-            
-            <form onSubmit={handleSubmit} className="modal-form">
-              <div className="form-group">
-                <label htmlFor="nome">Nome:</label>
-                <input
-                  type="text"
-                  id="nome"
-                  value={formData.nome}
-                  onChange={(e) => setFormData({...formData, nome: e.target.value})}
-                  required
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="email">Email:</label>
-                <input
-                  type="email"
-                  id="email"
-                  value={formData.email}
-                  onChange={(e) => setFormData({...formData, email: e.target.value})}
-                  required
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="senha">Senha:</label>
-                <input
-                  type="password"
-                  id="senha"
-                  value={formData.senha}
-                  onChange={(e) => setFormData({...formData, senha: e.target.value})}
-                  required={!editingAluno}
-                  placeholder={editingAluno ? 'Deixe em branco para manter a senha atual' : ''}
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="turma_id">Turma:</label>
-                <select
-                  id="turma_id"
-                  value={formData.turma_id}
-                  onChange={(e) => setFormData({...formData, turma_id: e.target.value})}
-                  required
-                >
-                  <option value="">Selecione uma turma</option>
-                  {turmas.map(turma => (
-                    <option key={turma.id} value={turma.id}>
-                      {turma.nome}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="modal-actions">
-                <button type="button" onClick={() => setShowModal(false)}>
-                  Cancelar
-                </button>
-                <button type="submit">
-                  {editingAluno ? 'Atualizar' : 'Cadastrar'}
-                </button>
-              </div>
-            </form>
           </div>
-        </div>
-      )}
-
+        )}
+      </div>
       <Footer />
     </div>
   );

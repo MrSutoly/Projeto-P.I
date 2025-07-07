@@ -1,4 +1,21 @@
 {
+  "name": "projeto-doutores-ambientais",
+  "version": "1.0.0",
+  "description": "Sistema educacional Doutores Ambientais Mirins",
+  "scripts": {
+    "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install",
+    "build": "cd frontend && npm run build",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "start": "cd backend && npm start"
+  },
+  "keywords": ["educacao", "meio-ambiente", "quiz", "react", "typescript"],
+  "author": "Equipe Doutores Ambientais",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
   "dependencies": {
     "bcrypt": "^6.0.0"
   }
