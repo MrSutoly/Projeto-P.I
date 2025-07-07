@@ -3,6 +3,7 @@ import { IQuizSessionRepository } from '../repository/i_quizsession_repository';
 import { QuizSession, StudentAnswer } from '../type/quizsession_type';
 import { AppError } from '../../../shared/errors/AppError';
 import { IManagementRepository } from '../../management/repository/i_management_repository';
+import { IQuizRepository } from '../../quiz/repository/i_quiz_repository';
 
 function generateAccessCode(length: number = 6): string {
     const characters = '0123456789';
@@ -19,11 +20,13 @@ export class QuizSessionUseCase {
         @inject('QuizSessionRepository')
         private quizSessionRepository: IQuizSessionRepository,
         @inject('ManagementRepository')
-        private managementRepository: IManagementRepository
+        private managementRepository: IManagementRepository,
+        @inject('QuizRepository')
+        private quizRepository: IQuizRepository
     ) {}
 
     async createSession(data: { quiz_id: number; professor_id: number; turma_id: number }): Promise<QuizSession> {
-        const quiz = await this.managementRepository.findQuizById(data.quiz_id);
+        const quiz = await this.quizRepository.findById(data.quiz_id);
         if (!quiz) {
             throw new AppError('Quiz não encontrado.', 404);
         }

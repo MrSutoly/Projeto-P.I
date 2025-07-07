@@ -3,6 +3,7 @@ import { executeQuery } from '../../shared/database/mysql/db';
 import { IUserRepository } from '../../domains/repositorys/i_user_repository';
 import { User } from '../../shared/util/entities/user_type';
 import { Class } from '../../shared/util/entities/class_type';
+import { selectFromTable, insertIntoTable, updateTable, deleteFromTable, findOne } from '../../shared/database/supabase/db';
 
 export class UserRepository implements IUserRepository {
     async GetAll(): Promise<User[]> {

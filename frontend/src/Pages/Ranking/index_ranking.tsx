@@ -6,8 +6,10 @@ import { useEffect, useState } from 'react';
 import api from '../../services/api';
 
 interface RankingData {
-  turma: string;
+  id: number;
+  nome: string;
   pontos: number;
+  posicao?: number;
 }
 
 function Ranking() {
@@ -18,17 +20,45 @@ function Ranking() {
   useEffect(() => {
     const fetchRanking = async () => {
       try {
-        // Ajuste o endpoint conforme o backend
+        console.log('Buscando ranking...');
         const response = await api.get('/management/ranking');
+        console.log('Resposta da API:', response.data);
         setDados(response.data);
       } catch (err: any) {
-        setErro(err.response?.data?.message || 'Erro ao buscar ranking.');
+        console.error('Erro ao buscar ranking:', err);
+        setErro(err.response?.data?.message || err.message || 'Erro ao buscar ranking.');
       } finally {
         setLoading(false);
       }
     };
     fetchRanking();
   }, []);
+
+  const getTrofeuIcon = (posicao: number) => {
+    switch (posicao) {
+      case 1:
+        return '🥇';
+      case 2:
+        return '🥈';
+      case 3:
+        return '🥉';
+      default:
+        return '🏆';
+    }
+  };
+
+  const getClasseDestaque = (posicao: number) => {
+    switch (posicao) {
+      case 1:
+        return 'primeiro-lugar';
+      case 2:
+        return 'segundo-lugar';
+      case 3:
+        return 'terceiro-lugar';
+      default:
+        return '';
+    }
+  };
 
   return (
     <>
@@ -40,18 +70,38 @@ function Ranking() {
         </div>
         <div className="ranking-classificacao">
           <div className="ranking-table-container">
-            <div className="ranking-school-title">Colégio Castelo Branco</div>
+            <div className="ranking-school-title">Ranking das Turmas</div>
             {loading ? (
-              <div>Carregando...</div>
+              <div className="loading-message">Carregando ranking...</div>
             ) : erro ? (
-              <div style={{color: 'red'}}>{erro}</div>
+              <div className="erro-message">
+                <strong>Erro:</strong> {erro}
+                <br />
+                <small>Verifique se o servidor está rodando na porta 3000</small>
+              </div>
+            ) : dados.length === 0 ? (
+              <div className="no-data-message">
+                <p>Nenhuma turma encontrada.</p>
+                <small>Cadastre turmas primeiro para visualizar o ranking.</small>
+              </div>
             ) : (
               <table className="ranking-table">
+                <thead>
+                  <tr>
+                    <th>Posição</th>
+                    <th>Turma</th>
+                    <th>Pontos</th>
+                  </tr>
+                </thead>
                 <tbody>
-                  {dados.map((item, idx) => (
-                    <tr key={idx}>
-                      <td>{item.turma}</td>
-                      <td>{item.pontos.toFixed(2)}</td>
+                  {dados.map((item) => (
+                    <tr key={item.id} className={getClasseDestaque(item.posicao || 0)}>
+                      <td className="posicao-cell">
+                        <span className="trofeu-icon">{getTrofeuIcon(item.posicao || 0)}</span>
+                        <span className="posicao-numero">{item.posicao}º</span>
+                      </td>
+                      <td className="nome-turma">{item.nome}</td>
+                      <td className="pontos-cell">{item.pontos.toFixed(2)} pts</td>
                     </tr>
                   ))}
                 </tbody>

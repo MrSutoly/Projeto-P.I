@@ -27,8 +27,8 @@ export type QuizResponse = {
     id?: number;
     usuario_id: number;  
     quiz_id: number;
-    pergunta_id: number;
-    opcao_id: number;
+    question_id: number;
+    option_id: number;
     timestamp?: Date;
 }
 

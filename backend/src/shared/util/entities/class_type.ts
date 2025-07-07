@@ -4,4 +4,6 @@ export type Class = {
     codigo: string;
     professor_id?: number;
     pontos?: number;
+    created_at?: string;
+    updated_at?: string;
 }

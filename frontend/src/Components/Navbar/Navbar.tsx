@@ -5,7 +5,7 @@ import { useAuth } from '../../contexts/AuthContext';
 
 function Navbar() {
   const [clicked, setClicked] = useState(false);
-  const { token, logout } = useAuth();
+  const { token, logout, user } = useAuth();
 
   const handleClick = () => {
     setClicked(!clicked);
@@ -24,12 +24,14 @@ function Navbar() {
         {clicked && <div className="overlay" onClick={handleClick}></div>}
 
         <ul className="navbarLista">
-          {Navbar_dados.map((val, key) => (
-            <li key={key} className='item' onClick={() => {window.location.pathname = val.link}}>
-              <div id='icone'>{val.icone}</div>
-              <div id='nome'>{val.nome}</div>
-            </li>
-          ))}
+          {Navbar_dados
+            .filter(val => !val.userType || val.userType === user?.role)
+            .map((val, key) => (
+              <li key={key} className='item' onClick={() => {window.location.pathname = val.link}}>
+                <div id='icone'>{val.icone}</div>
+                <div id='nome'>{val.nome}</div>
+              </li>
+            ))}
           {token && (
             <li className='item' onClick={logout} style={{color: 'red', fontWeight: 'bold', cursor: 'pointer'}}>
               <div id='icone'><i className="fa-solid fa-right-from-bracket"></i></div>

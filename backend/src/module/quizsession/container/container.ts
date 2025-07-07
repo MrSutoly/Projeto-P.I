@@ -3,6 +3,7 @@ import { IQuizSessionRepository } from '../repository/i_quizsession_repository';
 import { QuizSessionRepository } from '../repository/quizsession_repository';
 import { QuizSessionUseCase } from '../use-case/quizsession_use_case';
 import { QuizSessionController } from '../http/controller/session';
+import '../../../module/quiz/container/container';
 
 container.registerSingleton<IQuizSessionRepository>(
     'QuizSessionRepository',

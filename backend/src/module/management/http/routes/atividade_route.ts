@@ -15,8 +15,16 @@ atividadeRouter.get('/atividades', (req, res) =>
   atividadeController.getAllAtividades(req, res)
 );
 
+atividadeRouter.get('/atividades/status', (req, res) =>
+  atividadeController.getAtividadesByStatus(req, res)
+);
+
 atividadeRouter.get('/atividades/:id', (req, res) => 
   atividadeController.getAtividadeById(req, res)
+);
+
+atividadeRouter.get('/atividades/:id/completa', (req, res) =>
+  atividadeController.getAtividadeCompleta(req, res)
 );
 
 // Rotas protegidas (apenas professores e admins)
@@ -30,6 +38,15 @@ atividadeRouter.put('/atividades/:id', ensureTeacher, (req, res) =>
 
 atividadeRouter.delete('/atividades/:id', ensureTeacher, (req, res) => 
   atividadeController.deleteAtividade(req, res)
+);
+
+// Rotas especiais para gestão de atividades
+atividadeRouter.post('/atividades/liberar-proxima', ensureTeacher, (req, res) =>
+  atividadeController.liberarProximaAtividade(req, res)
+);
+
+atividadeRouter.patch('/atividades/:id/concluir', ensureAuthenticated, (req, res) =>
+  atividadeController.marcarAtividadeComoConcluida(req, res)
 );
 
 export default atividadeRouter; 

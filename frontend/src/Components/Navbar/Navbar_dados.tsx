@@ -40,7 +40,31 @@ export const Navbar_dados = [
         icone: <i className="fa-solid fa-trophy"></i>,
         link: "/Ranking",
     },
-        {
+    {
+        nome: "Gerenciar Alunos", 
+        icone: <i className="fa-solid fa-users"></i>,
+        link: "/CadastroAlunos",
+        userType: "professor"
+    },
+    {
+        nome: "Gerenciar Turmas", 
+        icone: <i className="fa-solid fa-graduation-cap"></i>,
+        link: "/CadastroTurmas",
+        userType: "professor"
+    },
+    {
+        nome: "Gerenciar Professores", 
+        icone: <i className="fa-solid fa-user-tie"></i>,
+        link: "/CadastroProfessores",
+        userType: "admin"
+    },
+    {
+        nome: "Gerenciar Turmas", 
+        icone: <i className="fa-solid fa-graduation-cap"></i>,
+        link: "/CadastroTurmas",
+        userType: "admin"
+    },
+    {
         nome: "Login", 
         icone: <i className="fa-solid fa-user"></i>,
         link: "/Login",

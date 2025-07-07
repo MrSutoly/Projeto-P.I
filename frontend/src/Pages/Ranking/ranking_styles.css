@@ -4,6 +4,33 @@
   padding: 0;
 }
 
+.login-top-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #5cb3aa;
+  padding: 10px 20px;
+  margin: 0;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.login-title {
+  font-size: 1.5rem;
+  color: #fff;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  text-align: center;
+}
+
+.login-logo-top {
+  position: absolute;
+  right: 20px;
+  top: 10px;
+  width: 50px;
+  height: 50px;
+}
+
 .ranking-header {
   text-align: center;
   margin-top: 10px;
@@ -17,11 +44,11 @@
 }
 
 .ranking-classificacao {
-  margin: 30px 40px 0 40px;
-  background: #e6f3f7;
-  border-radius: 12px;
-  border: 2px solid #65aca5;
-  padding-bottom: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  padding: 20px;
 }
 
 .ranking-classificacao-title {
@@ -36,37 +63,197 @@
 }
 
 .ranking-table-container {
-  background: #5fd0c9;
-  display: block;
-  border-radius: 20px;
-  margin: 5%;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  width: 100%;
+  max-width: 800px;
 }
 
 .ranking-school-title {
-  text-align: center;
-  font-size: 1.5rem;
+  font-size: 2rem;
+  color: #2c3e50;
+  font-weight: bold;
   font-family: 'Comic Sans MS', cursive, sans-serif;
-  background: #5fd0c9;
-  border-radius: 20px 20px 0 0;
-  padding: 15px 0 10px 0;
-  color: #222;
+  text-align: center;
+  margin-bottom: 30px;
 }
 
 .ranking-table {
   width: 100%;
   border-collapse: collapse;
-  background: #e6f3f7;
-  font-size: 1.2rem;
+  margin-top: 20px;
 }
 
+.ranking-table th,
 .ranking-table td {
-  border: 1px solid #222;
-  padding: 8px 20px;
+  padding: 15px;
   text-align: left;
-  font-family: 'Comic Sans MS', cursive, sans-serif;
-  background: #fff;
+  border-bottom: 1px solid #e0e0e0;
 }
 
-.ranking-table tr td:last-child {
+.ranking-table th {
+  background-color: #5cb3aa;
+  color: white;
+  font-weight: bold;
+  font-size: 1.1rem;
+  text-align: center;
+}
+
+.ranking-table tr:hover {
+  background-color: #f8f9fa;
+}
+
+.posicao-cell {
+  text-align: center;
+  width: 120px;
+  font-weight: bold;
+}
+
+.trofeu-icon {
+  font-size: 1.5rem;
+  margin-right: 8px;
+}
+
+.posicao-numero {
+  font-size: 1.2rem;
+  color: #2c3e50;
+}
+
+.nome-turma {
+  font-size: 1.1rem;
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+.pontos-cell {
   text-align: right;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #28a745;
+}
+
+.primeiro-lugar {
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  color: #2c3e50;
+  border-left: 5px solid #ffd700;
+}
+
+.segundo-lugar {
+  background: linear-gradient(135deg, #e6e6e6, #c0c0c0);
+  color: #2c3e50;
+  border-left: 5px solid #c0c0c0;
+}
+
+.terceiro-lugar {
+  background: linear-gradient(135deg, #cd7f32, #daa520);
+  color: #2c3e50;
+  border-left: 5px solid #cd7f32;
+}
+
+.primeiro-lugar:hover,
+.segundo-lugar:hover,
+.terceiro-lugar:hover {
+  transform: scale(1.01);
+  transition: transform 0.2s ease;
+}
+
+.loading-message {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #6c757d;
+  padding: 40px 0;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+}
+
+.erro-message {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #dc3545;
+  padding: 40px 0;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 10px;
+}
+
+.no-data-message {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #6c757d;
+  padding: 40px 0;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+  .ranking-classificacao {
+    padding: 10px;
+  }
+  
+  .ranking-table-container {
+    padding: 20px;
+  }
+  
+  .ranking-school-title {
+    font-size: 1.5rem;
+  }
+  
+  .ranking-table th,
+  .ranking-table td {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+  
+  .posicao-cell {
+    width: 80px;
+  }
+  
+  .trofeu-icon {
+    font-size: 1.2rem;
+  }
+  
+  .posicao-numero {
+    font-size: 1rem;
+  }
+  
+  .nome-turma {
+    font-size: 1rem;
+  }
+  
+  .pontos-cell {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .ranking-table-container {
+    padding: 15px;
+  }
+  
+  .ranking-school-title {
+    font-size: 1.3rem;
+  }
+  
+  .ranking-table th,
+  .ranking-table td {
+    padding: 8px;
+    font-size: 0.85rem;
+  }
+  
+  .posicao-cell {
+    width: 60px;
+  }
+  
+  .trofeu-icon {
+    font-size: 1rem;
+    margin-right: 5px;
+  }
+  
+  .posicao-numero {
+    font-size: 0.9rem;
+  }
 }

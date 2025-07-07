@@ -45,7 +45,7 @@ app.use('/recycling', recyclingRouter);
 
 app.use(
   (err: Error, request: Request, response: Response, next: NextFunction) => {
-    console.error('Erro na aplicação:', err);
+    console.error('Erro na aplicação');
     return response.status(500).json({
       error: 'Erro interno do servidor',
       message: process.env.NODE_ENV === 'development' ? err.message : 'Algo deu errado'

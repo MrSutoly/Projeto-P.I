@@ -7,6 +7,11 @@ import Percurso from "./Pages/Percurso/index_percurso";
 import Trilha from "./Pages/Trilha/index_trilha";
 import Ranking from "./Pages/Ranking/index_ranking";
 import Login from "./Pages/Login/index_login";
+import CadastroAlunos from "./Pages/CadastroAlunos/index_cadastro_alunos";
+import CadastroProfessores from "./Pages/CadastroProfessores/index_cadastro_professores";
+import CadastroTurmas from "./Pages/CadastroTurmas/index_cadastro_turmas";
+import AdminDashboard from "./Pages/Admin/index_admin";
+import InitialSetup from "./Pages/InitialSetup/index_setup";
 import PrivateRoute from "./Components/PrivateRoute";
 
 function MainRoutes(){
@@ -20,6 +25,11 @@ function MainRoutes(){
             <Route path="Percurso" element={<PrivateRoute><Percurso/></PrivateRoute>}/>
             <Route path="Trilha" element={<PrivateRoute><Trilha/></PrivateRoute>}/>
             <Route path="Ranking" element={<PrivateRoute><Ranking/></PrivateRoute>}/>
+            <Route path="CadastroAlunos" element={<PrivateRoute><CadastroAlunos/></PrivateRoute>}/>
+            <Route path="CadastroProfessores" element={<PrivateRoute><CadastroProfessores/></PrivateRoute>}/>
+            <Route path="CadastroTurmas" element={<PrivateRoute><CadastroTurmas/></PrivateRoute>}/>
+            <Route path="Admin" element={<PrivateRoute><AdminDashboard/></PrivateRoute>}/>
+            <Route path="Setup" element={<InitialSetup/>}/>
             <Route path="Login" element={<Login/>}/>
         </Routes>
     )

@@ -6,5 +6,7 @@ export type User = {
     email: string,
     password: string,
     role: UserRole,
-    class_id?: number,
+    turma_id?: number,
+    created_at?: string,
+    updated_at?: string,
 }

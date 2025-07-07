@@ -2,6 +2,12 @@ import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 import api from '../../services/api';
 import './Conteudo_Percurso.css';
+import Logo from '../../Imagens/LogoDoutoresAmbientais.png';
+import Navbar from '../Navbar/Navbar';
+import Footer from '../Footer/Footer';
+
+// Importar componente de Quiz
+import Quiz from '../../Pages/Quiz/index_quiz';
 
 interface Atividade {
   id: number;
@@ -61,6 +67,8 @@ const Conteudo_Percurso: React.FC = () => {
   const [atividades, setAtividades] = useState<Atividade[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [showQuiz, setShowQuiz] = useState(false);
+  const [selectedAtividade, setSelectedAtividade] = useState<Atividade | null>(null);
   const [formData, setFormData] = useState<CreateAtividadeRequest>({
     titulo: '',
     descricao: '',
@@ -86,21 +94,26 @@ const Conteudo_Percurso: React.FC = () => {
 
   const isTeacherOrAdmin = user?.role === 'professor' || user?.role === 'admin';
 
-  useEffect(() => {
-    fetchAtividades();
-  }, []);
-
   const fetchAtividades = async () => {
-    setLoading(true);
     try {
       const response = await api.get('/management/atividades');
-      setAtividades(response.data);
+      const atividadesData = response.data;
+      
+      // Ordenar atividades por ordem
+      const atividadesOrdenadas = atividadesData.sort((a: Atividade, b: Atividade) => a.ordem - b.ordem);
+      
+      setAtividades(atividadesOrdenadas);
+      setLoading(false);
     } catch (error) {
       console.error('Erro ao buscar atividades:', error);
-    } finally {
+      setAtividades([]);
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchAtividades();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -162,6 +175,47 @@ const Conteudo_Percurso: React.FC = () => {
     }));
   };
 
+  const handleAtividadeClick = async (atividade: Atividade) => {
+    if (atividade.status === 'bloqueada') {
+      alert('Esta atividade ainda não está disponível!');
+      return;
+    }
+
+    if (atividade.status === 'concluida') {
+      alert('Você já concluiu esta atividade!');
+      return;
+    }
+
+    // Marcar atividade como concluída
+    try {
+      const token = localStorage.getItem('token');
+      await fetch(`http://localhost:3333/api/management/atividades/${atividade.id}/concluir`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      // Atualizar lista local
+      setAtividades(prev => prev.map(a => 
+        a.id === atividade.id ? {...a, status: 'concluida'} : a
+      ));
+
+      alert(`Parabéns! Você concluiu a atividade "${atividade.titulo}" e ganhou ${atividade.pontos} pontos!`);
+    } catch (error) {
+      console.error('Erro ao concluir atividade:', error);
+      alert('Erro ao marcar atividade como concluída');
+    }
+  };
+
+  const handleQuizComplete = () => {
+    setShowQuiz(false);
+    setSelectedAtividade(null);
+    // Aqui você pode adicionar lógica para atualizar o status da atividade
+    fetchAtividades();
+  };
+
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'concluida':
@@ -189,34 +243,52 @@ const Conteudo_Percurso: React.FC = () => {
   };
 
   if (loading) {
-    return <div>Carregando...</div>;
+    return (
+      <div className="percurso-container">
+        <div className="loading-message">
+          <div className="loading-spinner">🔄</div>
+          <p>Carregando atividades...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Se estiver mostrando o quiz, renderizar apenas o componente Quiz
+  if (showQuiz && selectedAtividade) {
+    return <Quiz onComplete={handleQuizComplete} atividade={selectedAtividade} />;
   }
 
   return (
-    <div className="sec-percurso">
-      {/* Barra superior azul padrão */}
+    <div className="percurso-container">
       <div className="login-top-bar">
-        <div className="login-title">Percurso</div>
-        <img src="/logo.png" alt="Logo Doutores Ambientais" className="login-logo-top" />
+        <div className="login-top-content">
+          <h1 className="login-title">Doutores Ambientais Mirins</h1>
+          <img 
+            className="login-logo-top" 
+            src={Logo} 
+            alt="Logo" 
+          />
+        </div>
       </div>
 
-      <div className="conteudo">
-        {!showForm ? (
-          <>
-            {/* Header com botão adicionar */}
-            <div className="conteudo-header">
-              <div className="conteudo-titulo">Siga o percurso e complete as atividades aqui em baixo!</div>
-              {isTeacherOrAdmin && (
-                <button 
-                  className="btn-adicionar"
-                  onClick={() => setShowForm(true)}
-                >
-                  <span className="btn-icon">+</span>
-                  Adicionar Atividade
-                </button>
-              )}
-            </div>
+      <Navbar />
 
+      <div className="conteudo">
+        <div className="conteudo-header">
+          <h2 className="conteudo-titulo">Percurso de Aprendizagem</h2>
+        </div>
+
+        {atividades.length === 0 ? (
+          <div className="no-atividades-container">
+            <div className="no-atividades-icon">🌱</div>
+            <h3 className="no-atividades-title">Ainda não há atividades disponíveis</h3>
+            <p className="no-atividades-description">
+              Seu professor ainda não criou nenhuma atividade.<br/>
+              Volte mais tarde para começar sua jornada ambiental! 🌿
+            </p>
+          </div>
+        ) : (
+          <>
             {/* Percurso visual */}
             <div className="percurso-content">
               <div className="percurso-titulo">Início</div>
@@ -233,141 +305,78 @@ const Conteudo_Percurso: React.FC = () => {
                   <div 
                     className="progress-fill"
                     style={{
-                      width: `${(atividades.filter(a => a.status === 'concluida').length / atividades.length) * 100}%`
+                      width: atividades.length > 0 ? `${(atividades.filter(a => a.status === 'concluida').length / atividades.length) * 100}%` : '0%'
                     }}
                   ></div>
                 </div>
-                <div className="progress-points">
-                  🏆 Total de pontos: {atividades.filter(a => a.status === 'concluida').reduce((total, a) => total + a.pontos, 0)}
+                <div className="progress-percentage">
+                  {atividades.length > 0 ? Math.round((atividades.filter(a => a.status === 'concluida').length / atividades.length) * 100) : 0}%
                 </div>
               </div>
-              <div className="percurso-trilha">
-                {atividades.map((atividade, index) => (
-                  <div key={atividade.id} className="atividade-container"
-                    data-tooltip={
-                      atividade.status === 'concluida' ? `✅ ${atividade.titulo} - Concluída! (+${atividade.pontos} pontos)` : 
-                      atividade.status === 'disponivel' ? `🎯 ${atividade.titulo} - Clique para começar!` : 
-                      `🔒 ${atividade.titulo} - Complete a atividade anterior`
-                    }
-                  >
-                    <div 
-                      className={`atividade-circulo ${getStatusClass(atividade.status)}`}
-                      onClick={() => atividade.status === 'disponivel' && alert(`Iniciando atividade: ${atividade.titulo}`)}
-                    >
-                      <span className="atividade-icon">{getStatusIcon(atividade.status)}</span>
-                    </div>
-                    {index < atividades.length - 1 && (
-                      <div className="atividade-linha"></div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </>
-        ) : (
-          <>
-            {/* Header do formulário */}
-            <div className="conteudo-header">
-              <div className="conteudo-titulo">#Adicionar Atividades</div>
-            </div>
 
-            {/* Formulário de criação */}
-            <div className="form-container">
-              <form onSubmit={handleSubmit} className="atividade-form">
-                {/* Informações básicas da atividade */}
-                <div className="form-section">
-                  <div className="form-row">
-                    <div className="form-group">
-                      <label>Questão:</label>
-                      <textarea
-                        name="titulo"
-                        value={formData.titulo}
-                        onChange={handleInputChange}
-                        placeholder="Digite a questão principal..."
-                        rows={4}
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div className="form-row">
-                    <div className="form-group">
-                      <label>Data:</label>
-                      <input
-                        type="date"
-                        name="data"
-                        value={formData.data}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label>Horário:</label>
-                      <input
-                        type="text"
-                        name="horario"
-                        value={formData.horario}
-                        onChange={handleInputChange}
-                        placeholder="Ex: 09h - 12h"
-                        required
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Opções das perguntas */}
-                <div className="form-section">
-                  <h3>Opções</h3>
-                  {formData.perguntas[0]?.opcoes.map((opcao, opcaoIndex) => (
-                    <div key={opcaoIndex} className="opcao-container">
-                      <div className="opcao-input-container">
-                        <input
-                          type="text"
-                          value={opcao.texto}
-                          onChange={(e) => handleOpcaoChange(0, opcaoIndex, 'texto', e.target.value)}
-                          placeholder={`Opção ${opcaoIndex + 1}`}
-                          required
-                        />
-                        <label className="opcao-checkbox">
-                          <input
-                            type="checkbox"
-                            checked={opcao.correta}
-                            onChange={(e) => handleOpcaoChange(0, opcaoIndex, 'correta', e.target.checked)}
-                          />
-                          Correta
-                        </label>
+              {/* Lista de atividades */}
+              <div className="atividades-lista">
+                {atividades.map((atividade, index) => {
+                  const isLast = index === atividades.length - 1;
+                  
+                  return (
+                    <div key={atividade.id} className="atividade-item">
+                      <div 
+                        className={`atividade-circulo ${atividade.status}`}
+                        onClick={() => handleAtividadeClick(atividade)}
+                      >
+                        <div className="atividade-numero">{atividade.ordem}</div>
+                        <div className="atividade-icon">
+                          {atividade.status === 'concluida' ? '✅' : 
+                           atividade.status === 'disponivel' ? '🌱' : '🔒'}
+                        </div>
                       </div>
+                      
+                      <div className="atividade-info">
+                        <h3 className="atividade-titulo">{atividade.titulo}</h3>
+                        <p className="atividade-descricao">{atividade.descricao}</p>
+                        <div className="atividade-detalhes">
+                          <span className="atividade-tipo">{atividade.tipo}</span>
+                          <span className="atividade-pontos">{atividade.pontos} pontos</span>
+                          <span className="atividade-data">
+                            {new Date(atividade.data).toLocaleDateString('pt-BR')} às {atividade.horario}
+                          </span>
+                        </div>
+                        <div className={`atividade-status ${atividade.status}`}>
+                          {atividade.status === 'bloqueada' ? 'Bloqueada' :
+                           atividade.status === 'disponivel' ? 'Disponível' : 'Concluída'}
+                        </div>
+                      </div>
+
+                      {!isLast && <div className="atividade-linha"></div>}
                     </div>
-                  ))}
-                </div>
+                  );
+                })}
+              </div>
 
-                {/* Indicador de perguntas */}
-                <div className="perguntas-indicator">
-                  <span>Perguntas:</span>
-                  <div className="perguntas-dots">
-                    {[...Array(4)].map((_, index) => (
-                      <div key={index} className="pergunta-dot active"></div>
-                    ))}
-                  </div>
-                </div>
+              <div className="percurso-titulo final">🎓 Parabéns! Você é um Doutor Ambiental!</div>
+            </div>
 
-                {/* Botões de ação */}
-                <div className="form-buttons">
-                  <button type="button" onClick={() => setShowForm(false)} className="btn-voltar">
-                    Voltar
-                  </button>
-                  <button type="button" className="btn-adicionar-pergunta">
-                    Adicionar
-                  </button>
-                  <button type="submit" className="btn-salvar">
-                    Salvar
-                  </button>
-                </div>
-              </form>
+            {/* Estatísticas */}
+            <div className="stats-container">
+              <div className="stat-item">
+                <div className="stat-number">{atividades.filter(a => a.status === 'concluida').length}</div>
+                <div className="stat-label">Atividades Concluídas</div>
+              </div>
+              <div className="stat-item">
+                <div className="stat-number">{atividades.filter(a => a.status === 'disponivel').length}</div>
+                <div className="stat-label">Atividades Disponíveis</div>
+              </div>
+              <div className="stat-item">
+                <div className="stat-number">{atividades.reduce((total, a) => total + (a.status === 'concluida' ? a.pontos : 0), 0)}</div>
+                <div className="stat-label">Pontos Conquistados</div>
+              </div>
             </div>
           </>
         )}
       </div>
+
+      <Footer />
     </div>
   );
 };

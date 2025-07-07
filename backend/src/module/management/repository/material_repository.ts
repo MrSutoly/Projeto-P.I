@@ -1,58 +1,39 @@
 import { injectable } from 'tsyringe';
-import { executeQuery } from '../../../shared/database/mysql/db';
+import { selectFromTable, findOne, insertIntoTable, updateTable, deleteFromTable } from '../../../shared/database/supabase/db';
 import { IMaterialRepository } from './i_material_repository';
 import { Material } from '../../../shared/util/entities/material_type';
 
 @injectable()
 export class MaterialRepository implements IMaterialRepository {
     async findAll(): Promise<Material[]> {
-        return await executeQuery<Material[]>(
-            'SELECT * FROM materiais ORDER BY semana, created_at DESC'
-        );
+        return await selectFromTable<Material>('materiais');
     }
 
     async findById(id: number): Promise<Material | null> {
-        const [material] = await executeQuery<Material[]>(
-            'SELECT * FROM materiais WHERE id = ?',
-            [id]
-        );
-        return material || null;
+        return await findOne<Material>('materiais', { id });
     }
 
     async findBySemana(semana: number): Promise<Material[]> {
-        return await executeQuery<Material[]>(
-            'SELECT * FROM materiais WHERE semana = ? ORDER BY created_at DESC',
-            [semana]
-        );
+        return await selectFromTable<Material>('materiais', '*', { semana });
     }
 
     async findByTipo(tipo: string): Promise<Material[]> {
-        return await executeQuery<Material[]>(
-            'SELECT * FROM materiais WHERE tipo = ? ORDER BY semana, created_at DESC',
-            [tipo]
-        );
+        return await selectFromTable<Material>('materiais', '*', { tipo });
     }
 
     async create(material: Material): Promise<Material> {
-        const result = await executeQuery<{ insertId: number }>(
-            'INSERT INTO materiais (titulo, semana, topico, data, link, tipo) VALUES (?, ?, ?, ?, ?, ?)',
-            [material.titulo, material.semana, material.topico, material.data, material.link, material.tipo]
-        );
-        return { ...material, id: result.insertId };
+        const { id, ...materialData } = material;
+        const result = await insertIntoTable<Material>('materiais', materialData);
+        return result;
     }
 
     async update(material: Material): Promise<Material> {
-        await executeQuery(
-            'UPDATE materiais SET titulo = ?, semana = ?, topico = ?, data = ?, link = ?, tipo = ? WHERE id = ?',
-            [material.titulo, material.semana, material.topico, material.data, material.link, material.tipo, material.id]
-        );
-        return material;
+        const { id, ...materialData } = material;
+        const result = await updateTable<Material>('materiais', materialData, { id });
+        return result[0] || material;
     }
 
     async delete(id: number): Promise<void> {
-        await executeQuery(
-            'DELETE FROM materiais WHERE id = ?',
-            [id]
-        );
+        await deleteFromTable('materiais', { id });
     }
 } 

@@ -1,6 +1,6 @@
 import { injectable } from 'tsyringe';
 // ===================== PRODUÇÃO =====================
-import { executeQuery } from "../../../shared/database/mysql/db"; // DESCOMENTAR para produção
+import { findOne } from "../../../shared/database/supabase/db"; // DESCOMENTAR para produção
 import bcrypt from 'bcrypt';                                     // DESCOMENTAR para produção
 import { User } from '../../../shared/util/entities/user_type';
 import { ILoginRepository } from "./i_login_repository";
@@ -42,43 +42,27 @@ import { ILoginRepository } from "./i_login_repository";
     
    
    async findbyEmail(email: string): Promise<User | null> {
-        console.log('Buscando usuário por email:', email);
-        
-        const [user] = await executeQuery<User[]>(
-            'SELECT * FROM usuarios WHERE email = ?',
-            [email]
+        const user = await findOne<User>(
+            'usuarios',
+            { email }
         );
         
-        console.log('Usuário encontrado:', user ? 
-            { id: user.id, nome: user.nome, email: user.email, password: user.password?.substring(0, 20) + '...' } : 
-            'NENHUM USUÁRIO ENCONTRADO'
-        );
-        
-        return user || null;
+        return user;
     }
     
     async validPassword(password: string, hash: string): Promise<boolean> {
         try {
-            console.log('Validando senha:');
-            console.log('  - Senha fornecida:', password);
-            console.log('  - Hash do banco:', hash?.substring(0, 30) + '...');
-            console.log('  - Hash válido (inicia com $2b$):', hash?.startsWith('$2b$'));
-            
             if (!hash || hash.trim() === '') {
-                console.log('Hash vazio ou nulo');
                 return false;
             }
             if (!hash.startsWith('$2b$')) {
-                console.log('Hash não inicia com $2b$');
                 return false;
             }
             
             const validPass = await bcrypt.compare(password, hash);
-            console.log('Resultado da comparação bcrypt:', validPass);
-            
             return validPass;
         } catch (error) {
-            console.error('Erro na validação de senha:', error);
+            console.error('Erro na validação de senha');
             return false;
         }
     }   

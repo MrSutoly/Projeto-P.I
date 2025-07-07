@@ -1,80 +1,64 @@
 import { injectable } from 'tsyringe';
-import { executeQuery } from '../../../shared/database/mysql/db';
+import { selectFromTable, findOne, insertIntoTable, updateTable } from '../../../shared/database/supabase/db';
 import { IQuizSessionRepository } from './i_quizsession_repository';
 import { QuizSession, ConnectedStudent, StudentAnswer } from '../type/quizsession_type';
 
 @injectable()
 export class QuizSessionRepository implements IQuizSessionRepository {
     async createSession(session: QuizSession): Promise<QuizSession> {
-        const result = await executeQuery<{ insertId: number }>(
-            'INSERT INTO quiz_sessions (quiz_id, professor_id, turma_id, status, pergunta_atual, codigo_acesso) VALUES (?, ?, ?, ?, ?, ?)',
-            [session.quiz_id, session.professor_id, session.turma_id, 'aguardando', 1, session.codigo_acesso]
-        );
-        return { ...session, id: result.insertId, status: 'aguardando', pergunta_atual: 1 };
+        const { id, ...sessionData } = session;
+        const result = await insertIntoTable<QuizSession>('quiz_sessions', {
+            ...sessionData,
+            status: 'aguardando',
+            pergunta_atual: 1
+        });
+        return result;
     }
 
     async findSessionByCode(code: string): Promise<QuizSession | null> {
-        const [session] = await executeQuery<QuizSession[]>(
-            'SELECT * FROM quiz_sessions WHERE codigo_acesso = ?',
-            [code]
-        );
-        return session || null;
+        return await findOne<QuizSession>('quiz_sessions', { codigo_acesso: code });
     }
 
     async findSessionById(id: number): Promise<QuizSession | null> {
-        const [session] = await executeQuery<QuizSession[]>(
-            'SELECT * FROM quiz_sessions WHERE id = ?',
-            [id]
-        );
-        return session || null;
+        return await findOne<QuizSession>('quiz_sessions', { id });
     }
 
     async connectStudent(sessao_id: number, aluno_id: number): Promise<void> {
-        await executeQuery(
-            'INSERT IGNORE INTO quiz_alunos_conectados (sessao_id, aluno_id, status) VALUES (?, ?, "conectado")',
-            [sessao_id, aluno_id]
-        );
+        await insertIntoTable('connected_students', {
+            sessao_id,
+            aluno_id,
+            status: 'conectado'
+        });
     }
 
     async getConnectedStudents(sessao_id: number): Promise<ConnectedStudent[]> {
-        return await executeQuery<ConnectedStudent[]>(
-            'SELECT * FROM quiz_alunos_conectados WHERE sessao_id = ? AND status = "conectado"',
-            [sessao_id]
-        );
+        return await selectFromTable<ConnectedStudent>('connected_students', '*', { 
+            sessao_id, 
+            status: 'conectado' 
+        });
     }
 
     async startSession(sessao_id: number): Promise<void> {
-        await executeQuery(
-            'UPDATE quiz_sessions SET status = "em_andamento" WHERE id = ?',
-            [sessao_id]
-        );
+        await updateTable('quiz_sessions', { status: 'em_andamento' }, { id: sessao_id });
     }
 
     async setCurrentQuestion(sessao_id: number, pergunta_atual: number): Promise<void> {
-        await executeQuery(
-            'UPDATE quiz_sessions SET pergunta_atual = ? WHERE id = ?',
-            [pergunta_atual, sessao_id]
-        );
+        await updateTable('quiz_sessions', { pergunta_atual }, { id: sessao_id });
     }
 
     async submitAnswer(answer: StudentAnswer): Promise<void> {
-        await executeQuery(
-            'INSERT INTO quiz_respostas_alunos (sessao_id, aluno_id, pergunta_id, resposta_id, tempo_resposta) VALUES (?, ?, ?, ?, ?)',
-            [answer.sessao_id, answer.aluno_id, answer.pergunta_id, answer.resposta_id, answer.tempo_resposta]
-        );
+        const { id, ...answerData } = answer;
+        await insertIntoTable('student_answers', answerData);
     }
 
     async getAnswersForQuestion(sessao_id: number, pergunta_id: number): Promise<StudentAnswer[]> {
-        return await executeQuery<StudentAnswer[]>(
-            'SELECT * FROM quiz_respostas_alunos WHERE sessao_id = ? AND pergunta_id = ?',
-            [sessao_id, pergunta_id]
-        );
+        return await selectFromTable<StudentAnswer>('student_answers', '*', { 
+            sessao_id, 
+            pergunta_id 
+        });
     }
 
     async finishSession(sessao_id: number): Promise<void> {
-        await executeQuery(
-            'UPDATE quiz_sessions SET status = "finalizado" WHERE id = ?',
-            [sessao_id]
-        );
+        await updateTable('quiz_sessions', { status: 'finalizado' }, { id: sessao_id });
     }
 }

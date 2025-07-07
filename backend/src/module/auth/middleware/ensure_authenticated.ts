@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import { container } from 'tsyringe';
 import { JWTService } from '../services/jwt_service';
 
-interface AuthenticatedRequest extends Request {
+export interface AuthenticatedRequest extends Request {
     user?: {
         id: number;
     };

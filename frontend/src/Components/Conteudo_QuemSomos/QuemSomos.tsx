@@ -1,9 +1,11 @@
 import './QuemSomos.css';
 import Imagem from '../../Imagens/LogoDoutoresAmbientais.png';
+import Logo from '../../Imagens/LogoDoutoresAmbientais.png';
 import imagem_foto_beta from '../../Imagens/imagem_foto_beta.png';
 import rato_quemSomos1 from '../../Imagens/rato_quemSomos1.png';
 import rato_quemSomos2 from '../../Imagens/rato_quemSomos2.png';
 import React from 'react';
+import Equipe from "./Pessoas";
 
 const QuemSomos: React.FC = () => {
   return (
@@ -11,7 +13,7 @@ const QuemSomos: React.FC = () => {
         {/* Barra superior azul padrão */}
         <div className="login-top-bar">
             <div className="login-title">QUEM SOMOS</div>
-            <img src="/logo.png" alt="Logo Doutores Ambientais" className="login-logo-top" />
+            <img src={Logo} alt="Logo Doutores Ambientais" className="login-logo-top" />
         </div>
 
         <div className="conteudo">
@@ -46,10 +48,8 @@ const QuemSomos: React.FC = () => {
                 Nossa Equipe
             </div>
             <br />
-            <div className="foto">
-                <img src={imagem_foto_beta} alt="Coordenadora do projeto" />
-                <p><strong>Professora Natalia</strong><br/>Coordenadora do Projeto</p>                    
-            </div>
+            
+            <Equipe/>
 
             <div className='conteudo-texto'>
                 Nossa equipe é formada por educadores especializados em educação ambiental, pedagogos e 

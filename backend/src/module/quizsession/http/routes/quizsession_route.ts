@@ -1,17 +1,39 @@
-import { Router } from 'express';
+import { Router, RequestHandler } from 'express';
 import { container } from 'tsyringe';
 import { QuizSessionController } from '../controller/session';
 import { ensureAuthenticated } from '../../../auth/middleware/ensure_authenticated';
 import { ensureTeacher } from '../../../auth/middleware/ensure_teacher';
+import { AuthenticatedRequest } from '../../../../shared/types/express';
 
 const quizSessionRouter = Router();
 const controller = container.resolve(QuizSessionController);
 
-// Apenas professores podem criar e iniciar sessões
-quizSessionRouter.post('/session', ensureAuthenticated, ensureTeacher, (req, res) => controller.createSession(req, res));
-quizSessionRouter.post('/session/join', ensureAuthenticated, (req, res) => controller.joinSession(req, res));
-quizSessionRouter.post('/session/:sessao_id/start', ensureAuthenticated, ensureTeacher, (req, res) => controller.startSession(req, res));
-quizSessionRouter.post('/session/:sessao_id/pergunta/:pergunta_id/answer', ensureAuthenticated, (req, res) => controller.submitAnswer(req, res));
-quizSessionRouter.post('/session/:sessao_id/pergunta/:pergunta_id/next', ensureAuthenticated, (req, res) => controller.nextQuestion(req, res));
+// Handlers com tipagem correta
+const createSession: RequestHandler = (req, res) => {
+    return controller.createSession(req as AuthenticatedRequest, res);
+};
+
+const joinSession: RequestHandler = (req, res) => {
+    return controller.joinSession(req as AuthenticatedRequest, res);
+};
+
+const startSession: RequestHandler = (req, res) => {
+    return controller.startSession(req as AuthenticatedRequest, res);
+};
+
+const submitAnswer: RequestHandler = (req, res) => {
+    return controller.submitAnswer(req as AuthenticatedRequest, res);
+};
+
+const nextQuestion: RequestHandler = (req, res) => {
+    return controller.nextQuestion(req as AuthenticatedRequest, res);
+};
+
+// Aplicando middlewares e handlers
+quizSessionRouter.post('/session', ensureAuthenticated as RequestHandler, ensureTeacher as RequestHandler, createSession);
+quizSessionRouter.post('/session/join', ensureAuthenticated as RequestHandler, joinSession);
+quizSessionRouter.post('/session/:sessao_id/start', ensureAuthenticated as RequestHandler, ensureTeacher as RequestHandler, startSession);
+quizSessionRouter.post('/session/:sessao_id/pergunta/:pergunta_id/answer', ensureAuthenticated as RequestHandler, submitAnswer);
+quizSessionRouter.post('/session/:sessao_id/pergunta/:pergunta_id/next', ensureAuthenticated as RequestHandler, nextQuestion);
 
 export default quizSessionRouter;
