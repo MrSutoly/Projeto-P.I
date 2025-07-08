@@ -1,131 +1,130 @@
-# 📊 Status do Deploy - Supabase Edge Functions
+# �� Status do Deploy - Doutores Ambientais Mirins
 
-## ✅ **O QUE JÁ FOI PREPARADO**
+## ✅ BACKEND - Supabase Edge Functions
+**Status:** PREPARADO ✅
 
-### 🏗️ **Estrutura Backend**
-- ✅ `supabase/` - Estrutura Supabase criada
-- ✅ `supabase/functions/_shared/` - Arquivos compartilhados
-  - `cors.ts` - Configuração CORS
-  - `database.ts` - Cliente Supabase
-  - `auth.ts` - Verificação de autenticação
-- ✅ `supabase/functions/auth/` - Autenticação e login
-- ✅ `supabase/functions/management/` - CRUD completo
-- ✅ `supabase/functions/ranking/` - Sistema de ranking
-
-### 🛠️ **Scripts Automáticos**
-- ✅ `complete-deploy.sh` - Deploy do backend
-- ✅ `update-frontend.sh` - Atualização do frontend
-- ✅ `migrate-to-supabase.sh` - Script inicial
-- ✅ Guias completos criados
-
-## ❌ **O QUE FALTA FAZER**
-
-### 1. **🚀 Deploy do Backend** (5 minutos)
-```bash
-# Execute este comando:
-./complete-deploy.sh
+### Estrutura Implementada:
+```
+supabase/functions/
+├── auth/index.ts ✅
+├── management/index.ts ✅  
+├── ranking/index.ts ✅
+└── _shared/ ✅
+    ├── cors.ts
+    ├── database.ts
+    └── auth.ts
 ```
 
-**O que ele faz:**
-- Vincula ao seu projeto Supabase
-- Faz deploy das Edge Functions
-- Configura as URLs das APIs
+### Scripts Criados:
+- ✅ `complete-deploy.sh` - Deploy completo do backend
+- ✅ `update-frontend.sh` - Atualização automática do frontend
 
-### 2. **🌐 Atualização do Frontend** (2 minutos)
+**Próximo passo:** Executar `./complete-deploy.sh PROJECT_ID`
+
+---
+
+## ✅ FRONTEND - Vercel
+**Status:** PREPARADO ✅
+
+### Configuração:
+- ✅ Framework: Vite
+- ✅ Build funcionando 100%
+- ✅ Variáveis de ambiente configuradas
+- ✅ Root directory: `frontend`
+
+### Scripts Criados:
+- ✅ `deploy-vercel.sh` - Deploy automático no Vercel
+- ✅ `VERCEL_DEPLOY_GUIDE.md` - Guia completo
+
+**Próximo passo:** Deploy via interface web ou script automático
+
+---
+
+## 🎯 Próximos Passos
+
+### 1. Deploy do Backend (Supabase):
 ```bash
-# Após o deploy do backend, execute:
-./update-frontend.sh
+# Após obter Project ID do Supabase Dashboard
+./complete-deploy.sh PROJECT_ID
 ```
 
-**O que ele faz:**
-- Atualiza URLs da API
-- Substitui localhost pelas URLs do Supabase
-- Testa o build do frontend
+### 2. Deploy do Frontend (Vercel):
 
-### 3. **🗄️ Configuração do Banco** (3 minutos)
-1. Acesse: https://supabase.com/dashboard
-2. Vá em SQL Editor
-3. Execute: `backend/database/supabase_setup.sql`
+**Opção A - Interface Web (RECOMENDADO):**
+1. Acesse: https://vercel.com
+2. Login com GitHub
+3. Importe: `MrSutoly/Projeto-P.I`
+4. Configure:
+   - Root Directory: `frontend`
+   - Framework: Vite
+   - Environment Variable: `VITE_API_URL=https://PROJECT_ID.supabase.co/functions/v1`
+5. Deploy
 
-### 4. **📤 Deploy Frontend** (2 minutos)
-1. Acesse: https://vercel.com/dashboard
-2. Importe o repositório
-3. Deploy automático
-
-## 🎯 **RESULTADO FINAL**
-
-Após completar os passos acima, você terá:
-
-### 💰 **Custo Total: R$ 0,00/mês**
-- ✅ Backend: Supabase Edge Functions (gratuito)
-- ✅ Banco: PostgreSQL Supabase (gratuito)
-- ✅ Frontend: Vercel (gratuito)
-
-### 🌐 **URLs do Sistema**
-- **Frontend**: `https://projeto.vercel.app`
-- **API Auth**: `https://PROJECT_ID.supabase.co/functions/v1/auth`
-- **API Management**: `https://PROJECT_ID.supabase.co/functions/v1/management`
-- **API Ranking**: `https://PROJECT_ID.supabase.co/functions/v1/ranking`
-- **Dashboard**: `https://supabase.com/dashboard/project/PROJECT_ID`
-
-### 🔑 **Credenciais de Teste**
-- **Admin**: `admin@teste.com` / `admin123`
-- **Professor**: `professor@teste.com` / `professor123`
-- **Aluno**: `aluna@teste.com` / `aluna123`
-
-## 📋 **Checklist de Deploy**
-
-- [ ] 1. Executar `./complete-deploy.sh`
-- [ ] 2. Executar `./update-frontend.sh`
-- [ ] 3. Configurar banco no Supabase Dashboard
-- [ ] 4. Deploy frontend no Vercel
-- [ ] 5. Testar login no sistema
-- [ ] 6. Testar CRUD de usuários
-- [ ] 7. Testar criação de turmas
-- [ ] 8. Testar sistema de atividades
-
-## 🚀 **Vantagens da Solução Supabase**
-
-### ✅ **Benefícios**
-- 💰 **Custo zero** (vs R$ 25-100/mês outras opções)
-- ⚡ **Performance superior** (Edge Computing)
-- 🔗 **Integração total** (banco + backend + auth)
-- 📊 **Monitoramento nativo**
-- 🛡️ **Segurança robusta** (Row Level Security)
-- 🚀 **Deploy com 1 comando**
-
-### 📈 **Escalabilidade**
-- **Gratuito**: até 500k requests/mês
-- **Pro**: $25/mês para milhões de requests
-- **Crescimento natural** sem reconfiguração
-
-## 🆘 **Suporte**
-
-### 📖 **Documentação Criada**
-- `SUPABASE_EDGE_FUNCTIONS_GUIDE.md` - Guia técnico
-- `COMPARACAO_DEPLOY_OPTIONS.md` - Comparação de opções
-- `DEPLOY_GUIDE.md` - Guia original
-
-### 🔧 **Comandos Úteis**
+**Opção B - Script Automático:**
 ```bash
-# Ver logs das Edge Functions
-npx supabase functions logs auth --follow
-
-# Deploy específico
-npx supabase functions deploy auth
-
-# Rodar localmente
-npx supabase functions serve
+./deploy-vercel.sh https://PROJECT_ID.supabase.co/functions/v1
 ```
 
 ---
 
-## 🎉 **PRONTO PARA DEPLOY!**
+## 🌐 URLs Finais (Após Deploy)
 
-**Execute agora:**
-```bash
-./complete-deploy.sh
+- **Frontend:** https://projeto-doutores-ambientais.vercel.app
+- **Backend:** https://PROJECT_ID.supabase.co/functions/v1
+- **Repositório:** https://github.com/MrSutoly/Projeto-P.I
+
+---
+
+## 🔑 Credenciais de Teste
+
+```
+Admin:
+- Email: admin@teste.com  
+- Senha: admin123
+
+Professor:
+- Email: professor@teste.com
+- Senha: professor123
+
+Aluno:
+- Email: aluna@teste.com
+- Senha: aluna123
 ```
 
-**Tempo estimado total: 12 minutos** ⏱️
-**Custo: R$ 0,00/mês** 💰 
+---
+
+## 💰 Custos Totais
+
+- **Vercel (Frontend):** R$ 0,00/mês (Free Tier)
+- **Supabase (Backend):** R$ 0,00/mês (Free Tier)
+- **Total:** R$ 0,00/mês 🎉
+
+---
+
+## 📋 Checklist de Deploy
+
+### Backend (Supabase):
+- [x] Edge Functions criadas
+- [x] Scripts automáticos
+- [x] Documentação completa
+- [ ] Deploy executado
+- [ ] Teste das APIs
+
+### Frontend (Vercel):
+- [x] Build funcionando
+- [x] Scripts automáticos  
+- [x] Guia de deploy
+- [x] Variáveis de ambiente
+- [ ] Deploy executado
+- [ ] Teste da aplicação
+
+### Integração:
+- [ ] Backend + Frontend integrados
+- [ ] Teste completo do sistema
+- [ ] Documentação final
+
+---
+
+**🚀 Sistema 98% pronto para deploy!**
+
+**Última atualização:** `date +"%d/%m/%Y %H:%M"` 
